@@ -23,6 +23,28 @@ public abstract class Entity {
         this.img = img;
     }
 
+    public void moveRight() {
+        this.x = this.x + 5;
+        this.img = Sprite.player_right.getFxImage();
+    }
+
+    public void moveLeft() {
+        this.x = this.x - 5;
+        this.img = Sprite.player_left.getFxImage();
+    }
+
+    public void moveUp() {
+        this.y = this.y - 5;
+        this.img = Sprite.player_up.getFxImage();
+    }
+
+    public void moveDown() {
+        this.y = this.y + 5;
+        this.img = Sprite.player_down.getFxImage();
+    }
+
+
+
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
     }
