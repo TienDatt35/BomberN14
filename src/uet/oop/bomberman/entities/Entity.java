@@ -22,8 +22,8 @@ public abstract class Entity {
         this.x = x * Sprite.SCALED_SIZE;
         this.y = y * Sprite.SCALED_SIZE;
         this.img = img;
-        this.dir = 4;
-        this.curState = 1;
+        this.dir = 1;
+        this.curState = 0;
         this.death = false;
         this.timeChange = -1;
     }
@@ -32,8 +32,8 @@ public abstract class Entity {
         this.x = x * Sprite.SCALED_SIZE;
         this.y = y * Sprite.SCALED_SIZE;
         this.img = img;
-        this.dir = 4;
-        this.curState = 1;
+        this.dir = 1;
+        this.curState = 0;
         this.death = false;
         this.timeChange = timeChange;
     }
@@ -98,5 +98,5 @@ public abstract class Entity {
         gc.drawImage(img, x, y);
     }
 
-    public abstract void update();
+    public abstract void update(long l);
 }

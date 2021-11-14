@@ -1,10 +1,12 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.graphics.Sprite;
 
-public class Wall extends Entity {
+import java.util.ArrayList;
 
-    public Wall(int x, int y, Image img) {
+public class Brick extends Entity {
+    public Brick(int x, int y, Image img) {
         super(x, y, img);
     }
 
@@ -12,4 +14,5 @@ public class Wall extends Entity {
     public void update(long l) {
 
     }
+
 }
