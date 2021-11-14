@@ -16,8 +16,6 @@ public class Enemy extends Entity {
     protected static int[] xx = {0, 1, 0, -1};
     protected static int[] yy = {-1, 0, 1, 0};
 
-    protected static Random ran = new Random(); //Bỏ cái này đi
-
     List<Integer> randomDir = new ArrayList<Integer>(); //List lưu lại các hướng
 
     public Enemy(int x, int y, Image img) {
