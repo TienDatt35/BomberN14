@@ -44,7 +44,7 @@ public class Balloon extends Enemy {
         //Kiểm tra trạng thái quái
         if (this.isDeath() == true) {
             if (l >= timeChange) {
-                timeChange += 200000000;
+                timeChange += 100000000;
                 curState += 1;
                 if (curState == 4) {
                     return;
