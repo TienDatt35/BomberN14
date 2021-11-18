@@ -13,8 +13,8 @@ public class Enemy extends Entity {
     protected int speed; //Tốc độ
     protected int imgDir; //Ảnh hướng
 
-    protected static int[] xx = {0, 1, 0, -1};
-    protected static int[] yy = {-1, 0, 1, 0};
+    protected static int[] dirX = {0, 1, 0, -1};
+    protected static int[] dirY = {-1, 0, 1, 0};
 
     List<Integer> randomDir = new ArrayList<Integer>(); //List lưu lại các hướng
 
