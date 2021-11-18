@@ -27,15 +27,12 @@ public class BombermanGame extends Application {
     private GraphicsContext gc;
     private Canvas canvas;
 
-    //    private List<Entity> entities = new ArrayList<>();
-//    private List<Entity> stillObjects = new ArrayList<>();
     public static List<Wall> stillObjects = new ArrayList<>();
     public static List<Brick> bricks = new ArrayList<>();
 //    public static List<Enemy> enemies = new ArrayList<>();
 //    public static List<Item> items = new ArrayList<>();
-//    public static List<Wall> stillObjects = new ArrayList<>();
-    public static List<Flame> flames = new ArrayList<>();
-    public static List<Bomb> bombs = new ArrayList<>();
+//    public static List<Flame> flames = new ArrayList<>();
+//    public static List<Bomb> bombs = new ArrayList<>();
 
     static String path = System.getProperty("user.dir") + "/res/";
     static Entity background = new Grass(0, 0, Sprite.grass.getFxImage());
