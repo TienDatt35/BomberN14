@@ -17,9 +17,9 @@ public abstract class Entity {
     protected long timeChange;
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
-    public Entity( int xUnit, int yUnit, Image img) {
-        this.x = xUnit * Sprite.SCALED_SIZE;
-        this.y = yUnit * Sprite.SCALED_SIZE;
+    public Entity( int x, int y, Image img) {
+        this.x = x * Sprite.SCALED_SIZE;
+        this.y = y * Sprite.SCALED_SIZE;
         this.img = img;
         this.dir = 1;
         this.curState = 0;
@@ -35,26 +35,6 @@ public abstract class Entity {
         this.curState = 0;
         this.death = false;
         this.timeChange = timeChange;
-    }
-
-    public void moveRight() {
-        this.x = this.x + 5;
-        this.img = Sprite.player_right.getFxImage();
-    }
-
-    public void moveLeft() {
-        this.x = this.x - 5;
-        this.img = Sprite.player_left.getFxImage();
-    }
-
-    public void moveUp() {
-        this.y = this.y - 5;
-        this.img = Sprite.player_up.getFxImage();
-    }
-
-    public void moveDown() {
-        this.y = this.y + 5;
-        this.img = Sprite.player_down.getFxImage();
     }
 
     public int getCurState() {
