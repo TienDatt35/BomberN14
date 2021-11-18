@@ -73,26 +73,6 @@ public class Bomber extends Entity {
         reborn = false;
     }
 
-//    public void moveRight() {
-//        this.x = this.x + 5;
-//        this.img = Sprite.player_right.getFxImage();
-//    }
-//
-//    public void moveLeft() {
-//        this.x = this.x - 5;
-//        this.img = Sprite.player_left.getFxImage();
-//    }
-//
-//    public void moveUp() {
-//        this.y = this.y - 5;
-//        this.img = Sprite.player_up.getFxImage();
-//    }
-//
-//    public void moveDown() {
-//        this.y = this.y + 5;
-//        this.img = Sprite.player_down.getFxImage();
-//    }
-
     int dirX(int dir) {
         if (dir == 1) {
             return 1;
@@ -135,29 +115,6 @@ public class Bomber extends Entity {
                 }
                 break;
         }
-//        if (curDir == 1 || curDir == 3) {
-//            return 0;
-//        }
-//        switch (curDir) {
-//            case (0):
-//                if (x < entity.getX() && entity.getX() - x > 10) {
-//                    System.out.println(1);
-//                    return -1;
-//                }
-//                if (x > entity.getX() && x - entity.getX() > 20) {
-//                    return 1;
-//                }
-//                break;
-//            case (2):
-//                if (x < entity.getX() && entity.getX() - x > 10) {
-//                    System.out.println(2);
-//                    return -1;
-//                }
-//                if (x > entity.getX() && x - entity.getX() > 20) {
-//                    return 1;
-//                }
-//                break;
-//        }
         return 0;
     }
 
