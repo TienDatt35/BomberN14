@@ -29,20 +29,16 @@ public class BombermanGame extends Application {
 
     public static List<Wall> stillObjects = new ArrayList<>();
     public static List<Brick> bricks = new ArrayList<>();
-//    public static List<Enemy> enemies = new ArrayList<>();
+    public static List<Enemy> enemies = new ArrayList<>();
 //    public static List<Item> items = new ArrayList<>();
-//    public static List<Flame> flames = new ArrayList<>();
-//    public static List<Bomb> bombs = new ArrayList<>();
+    public static List<Flame> flames = new ArrayList<>();
+    public static List<Bomb> bombs = new ArrayList<>();
 
     static String path = System.getProperty("user.dir") + "/res/";
     static Entity background = new Grass(0, 0, Sprite.grass.getFxImage());
     public static Bomber player;
     public static String[] map = {"Level1.txt", "Level2.txt", "Level3.txt"};
 
-    //    char[][] mapMatrix;
-//    int numberLevel = 0;
-//    int numberRow = 0;
-//    int numberColumn = 0;
     public static int bomberDirection = -1;
     public static boolean dropBomb = false;
     public static boolean preDropBomb = false;
@@ -59,55 +55,15 @@ public class BombermanGame extends Application {
 
     static void loadAll() {
         Brick.load();
-//        Balloon.load();
+        Balloon.load();
 //        Bomb.load();
         Bomber.load();
 //        Flame.load();
-//        Oneal.load();
-//        Kondoria.load();
-//        Minvo.load();
+        Oneal.load();
+        Kondoria.load();
+        Minvo.load();
     }
 
-//    private void createMapFromFile() {
-////        String filePath = "C:\\Users\\Huyen\\Desktop\\Hai\\UET\\hoc\\OOP\\bomberman-starter-starter-2\\res\\levels\\level1.txt";
-//        String filePath = "res/levels/Level1.txt";
-//        try {
-//            File file = new File(filePath);
-//            FileReader fr = new FileReader(file);
-//            BufferedReader br = new BufferedReader(fr);
-////            StringBuffer sb = new StringBuffer();
-//            String line;
-//
-//            if ((line = br.readLine()) != null) {
-//                String[] tokens = line.split("\\s");
-//                numberLevel = Integer.parseInt(tokens[0]);
-//                numberRow = Integer.parseInt(tokens[1]);
-//                numberColumn = Integer.parseInt(tokens[2]);
-//            }
-//            if (numberLevel < 1 || (numberRow < 1 && numberColumn < 1)) {
-//                return;
-//            }
-//
-//            mapMatrix = new char[numberRow][numberColumn];
-//            int countRow = -1;
-//            while ((line = br.readLine()) != null && line.startsWith("#")) {
-//                countRow = countRow + 1;
-//                for (int i = 0; i < line.length(); i++) {
-//                    mapMatrix[countRow][i] = line.charAt(i);
-//                }
-//            }
-//            for (int i = 0; i < numberRow; i++) {
-//                for (int j = 0; j < numberColumn; j++) {
-//                    System.out.print(mapMatrix[i][j]);
-//                }
-//                System.out.print("\n");
-//            }
-//
-//            fr.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void makeMap(String fileName) {
         try {
@@ -145,22 +101,18 @@ public class BombermanGame extends Application {
         scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
                 case RIGHT: {
-//                    bomberman.moveRight();
                     bomberDirection = 1;
                     break;
                 }
                 case LEFT: {
-//                    bomberman.moveLeft();
                     bomberDirection = 3;
                     break;
                 }
                 case UP: {
-//                    bomberman.moveUp();
                     bomberDirection = 0;
                     break;
                 }
                 case DOWN: {
-//                    bomberman.moveDown();
                     bomberDirection = 2;
                     break;
                 }
@@ -185,7 +137,6 @@ public class BombermanGame extends Application {
         stage.show();
         makeMap(map[0]);
 
-//        createMap();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
@@ -210,7 +161,7 @@ public class BombermanGame extends Application {
 
     public void clearAll() {
         bricks.clear();
-//        enemies.clear();
+        enemies.clear();
 //        items.clear();
         stillObjects.clear();
 //        flames.clear();
@@ -220,92 +171,6 @@ public class BombermanGame extends Application {
         preDropBomb = false;
 //        curIdBomb = -1;
     }
-
-//    public void createMap() {
-////        Scanner objReader = new Scanner(new File(path + "levels/" +fileName));
-////        numberLevel = objReader.nextInt();
-////        numberRow = objReader.nextInt();
-////        numberColumn = objReader.nextInt();
-////        objReader.nextLine();
-////        for (int i = 0; i < numberRow; i++) {
-//////            String line = objReader.nextLine();
-////            for (int j = 0; j < numberColumn; i++) {
-////
-////            }
-////        }
-//        createMapFromFile();
-//        for (int i = 0; i < numberRow; i++) {
-//            for (int j = 0; j < numberColumn; j++) {
-//                if (mapMatrix[i][j] == '#') {
-//                    Wall wall = new Wall(j, i, Sprite.wall.getFxImage());
-//                    stillObjects.add(wall);
-//                } else {
-//                    Grass grass = new Grass(j, i, Sprite.grass.getFxImage());
-//                    grass.render(gc);
-//                    entities.add(grass);
-//
-//                    switch (mapMatrix[i][j]) {
-//                        case '*':
-//                            Brick brick = new Brick(j, i, Sprite.brick.getFxImage());
-//                            bricks.add(brick);
-//                            break;
-//                        case 'p':
-//                            player = new Bomber(j, i, Sprite.player_right.getFxImage());
-//                            entities.add(player);
-//                            break;
-//                        case '1':
-//                            break;
-//                        case '2':
-//                            break;
-//                        case 'x':
-//                            break;
-//                    }
-//                }
-////                Entity object1 = new Grass(j, i, Sprite.grass.getFxImage());
-////                object1.render(gc);
-////                stillObjects.add(object1);
-////                switch (mapMatrix[i][j]) {
-////                    case '#': {
-////                        Entity object = new Wall(j, i, Sprite.wall.getFxImage());
-//////                        stillObjects.add(object);
-////                        break;
-////                    }
-////                    case 'p': {
-//////                        Entity object = new Bomber(j, i, Sprite.player_right.getFxImage());
-////                        bomberman = new Bomber(j, i, Sprite.player_right.getFxImage());
-//////                        stillObjects.add(bomberman);
-////                        break;
-////                    }
-////                    case '*': {
-////                        Entity object = new Bomber(j, i, Sprite.brick.getFxImage());
-//////                        stillObjects.add(object);
-////                        break;
-////                    }
-////                    case '1': {
-////                        Entity object = new Bomber(j, i, Sprite.balloom_left1.getFxImage());
-//////                        stillObjects.add(object);
-////                        break;
-////                    }
-////                    case '2': {
-////                        Entity object = new Bomber(j, i, Sprite.oneal_left1.getFxImage());
-//////                        stillObjects.add(object);
-////                        break;
-////                    }
-////                    case 'x': {
-////                        Entity object = new Bomber(j, i, Sprite.portal.getFxImage());
-//////                        stillObjects.add(object);
-////                        break;
-////                    }
-////                    case 'f': {
-////                        Entity object = new Bomber(j, i, Sprite.powerup_flames.getFxImage());
-//////                        stillObjects.add(object);
-////                        break;
-////                    }
-////                }
-//            }
-//        }
-//        stillObjects.forEach(g -> g.render(gc));
-//    }
 
     public void createMap(String fileName) throws IOException {
         clearAll();
@@ -329,18 +194,18 @@ public class BombermanGame extends Application {
                         case ('p'):
                             player = new Bomber(j, i, Sprite.player_right.getFxImage());
                             break;
-//                        case ('1'):
-//                            enemies.add(new Balloon(j, i, Sprite.balloom_left1.getFxImage()));
-//                            break;
-//                        case ('2'):
-//                            enemies.add(new Oneal(j, i, Sprite.oneal_left1.getFxImage()));
-//                            break;
-//                        case ('3'):
-//                            enemies.add(new Minvo(j, i, Sprite.minvo_left1.getFxImage()));
-//                            break;
-//                        case ('4'):
-//                            enemies.add(new Kondoria(j, i, Sprite.kondoria_left1.getFxImage()));
-//                            break;
+                        case ('1'):
+                            enemies.add(new Balloon(j, i, Sprite.balloom_left1.getFxImage()));
+                            break;
+                        case ('2'):
+                            enemies.add(new Oneal(j, i, Sprite.oneal_left1.getFxImage()));
+                            break;
+                        case ('3'):
+                            enemies.add(new Minvo(j, i, Sprite.minvo_left1.getFxImage()));
+                            break;
+                        case ('4'):
+                            enemies.add(new Kondoria(j, i, Sprite.kondoria_left1.getFxImage()));
+                            break;
                         case ('*'):
                             bricks.add(new Brick(j, i, Sprite.brick.getFxImage()));
                             break;
@@ -402,14 +267,14 @@ public class BombermanGame extends Application {
 //            }
 //        }
 //
-//        for (int i = flames.size() - 1; i >= 0; --i) {
-//            Flame f = flames.get(i);
-//            setBackground(f);
-//            f.update(l);
-//            if (f.isDeath()) {
-//                flames.remove(i);
-//            }
-//        }
+        for (int i = flames.size() - 1; i >= 0; --i) {
+            Flame f = flames.get(i);
+            setBackground(f);
+            f.update(l);
+            if (f.isDeath()) {
+                flames.remove(i);
+            }
+        }
 
         for (int i = bricks.size() - 1; i >=0 ; --i) {
             Brick e = bricks.get(i);
@@ -446,16 +311,7 @@ public class BombermanGame extends Application {
         }
     }
 
-//    public void render() {
-//        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-//        stillObjects.forEach(g -> g.render(gc));
-//        entities.forEach(g -> g.render(gc));
-//    }
-
     public void render() {
-//        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-//        stillObjects.forEach(g -> g.render(gc));
-//        entities.forEach(g -> g.render(gc));
 //        for (Item i : items) {
 //            if (!i.isOpen()) {
 //                continue;
@@ -466,22 +322,22 @@ public class BombermanGame extends Application {
 //                i.render(gc);
 //            }
 //        }
-//
-//        for (Bomb b : bombs) {
-//            b.render(gc);
-//        }
-//
-//        for (Flame f : flames) {
-//            f.render(gc);
-//        }
+
+        for (Bomb b : bombs) {
+            b.render(gc);
+        }
+
+        for (Flame f : flames) {
+            f.render(gc);
+        }
 
         for (Brick e : bricks) {
             e.render(gc);
         }
-//        for (Enemy e : enemies) {
-//            e.render(gc);
-//        }
-//
+        for (Enemy e : enemies) {
+            e.render(gc);
+        }
+
         player.render(gc);
     }
 }
