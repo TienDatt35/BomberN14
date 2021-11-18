@@ -27,39 +27,6 @@ public class Enemy extends Entity {
         }
     }
 
-    public boolean canMove(int newX, int newY) {
-        Rectangle2D rect = new Rectangle2D(newX, newY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-        Rectangle2D initRect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-
-        for(int i = 0; i < BombermanGame.bombs.size(); i++) {
-            double tmpX = BombermanGame.bombs.get(i).getX();
-            double tmpY = BombermanGame.bombs.get(i).getY();
-            if (initRect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                continue;
-            }
-            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                return false;
-            }
-        }
-
-        for(int i = 0; i < BombermanGame.stillObjects.size(); i++) {
-            double tmpX = BombermanGame.stillObjects.get(i).getX();
-            double tmpY = BombermanGame.stillObjects.get(i).getY();
-            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                return false;
-            }
-        }
-
-        for(int i = 0; i < BombermanGame.bricks.size(); i++) {
-            double tmpX = BombermanGame.bricks.get(i).getX();
-            double tmpY = BombermanGame.bricks.get(i).getY();
-            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     @Override
     public void update(long l) {
 

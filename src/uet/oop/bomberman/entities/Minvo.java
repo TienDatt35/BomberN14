@@ -5,33 +5,38 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
-public class Oneal extends Enemy {
-    final private int maxSpeed = 3;
-    public static int[][] d = new int[Sprite.SCALED_SIZE * BombermanGame.WIDTH][Sprite.SCALED_SIZE * BombermanGame.HEIGHT];
+public class Minvo extends Enemy {
     public static ArrayList <ArrayList<Image> > constImage = new ArrayList<>();
-
     public static void load() {
-        constImage.add(new ArrayList<>());
-        constImage.add(new ArrayList<>());
-        constImage.get(1).add(Sprite.oneal_right1.getFxImage());
-        constImage.get(1).add(Sprite.oneal_right2.getFxImage());
-        constImage.get(1).add(Sprite.oneal_right3.getFxImage());
-        constImage.add(new ArrayList<>());
-        constImage.add(new ArrayList<>());
-        constImage.get(3).add(Sprite.oneal_left1.getFxImage());
-        constImage.get(3).add(Sprite.oneal_left2.getFxImage());
-        constImage.get(3).add(Sprite.oneal_left3.getFxImage());
+        //up
         constImage.add(new ArrayList<Image>());
-        constImage.get(4).add(Sprite.oneal_dead.getFxImage());
+        //right
+        constImage.add(new ArrayList<Image>());
+        constImage.get(1).add(Sprite.minvo_right1.getFxImage());
+        constImage.get(1).add(Sprite.minvo_right2.getFxImage());
+        constImage.get(1).add(Sprite.minvo_right3.getFxImage());
+        //down
+        constImage.add(new ArrayList<Image>());
+        //left
+        constImage.add(new ArrayList<Image>());
+        constImage.get(3).add(Sprite.minvo_left1.getFxImage());
+        constImage.get(3).add(Sprite.minvo_left2.getFxImage());
+        constImage.get(3).add(Sprite.minvo_left3.getFxImage());
+        /// dead
+        constImage.add(new ArrayList<Image>());
+        constImage.get(4).add(Sprite.minvo_dead.getFxImage());
         constImage.get(4).add(Sprite.mob_dead1.getFxImage());
         constImage.get(4).add(Sprite.mob_dead2.getFxImage());
         constImage.get(4).add(Sprite.mob_dead3.getFxImage());
     }
 
-    public Oneal(int x, int y, Image img) {
-        super(x, y, img);
+    public Minvo(int x, int y, Image img) {
+        super( x, y, img);
+        this.speed = 2;
     }
 
     public boolean canMove(int newX, int newY) {
@@ -67,40 +72,6 @@ public class Oneal extends Enemy {
         return true;
     }
 
-    public void minDis() {
-        int n = Sprite.SCALED_SIZE * BombermanGame.WIDTH;
-        int m = Sprite.SCALED_SIZE * BombermanGame.HEIGHT;
-        for (int i = n-1; i >= 0; i--) {
-            for(int j = m-1; j >= 0; j--) {
-                d[i][j] = 100000000;
-            }
-        }
-
-        d[BombermanGame.player.getX()][BombermanGame.player.getY()] = 0;
-        // Loang để tìm trọng số tại những điểm từ player có thể đến được
-        // Càng gần player thì trọng số càng nhỏ
-        int[] qX = new int[n * m];
-        int[] qY = new int[n * m];
-        int top = 0;
-        int bot = 0;
-        qX[bot] = BombermanGame.player.getX();
-        qY[bot++] = BombermanGame.player.getY();
-        while (top < bot) {
-            int u = qX[top];
-            int v = qY[top++];
-            for (int i = 0; i < 4; ++i) {
-                int x = u + dirX[i];
-                int y = v + dirY[i];
-                if (x < 0 || y < 0 || x >= n || y >= m || !canMove(x, y) || d[x][y] != 100000000) {
-                    continue;
-                }
-                d[x][y] = d[u][v] + 1;
-                qX[bot] = x;
-                qY[bot++] = y;
-            }
-        }
-    }
-
     @Override
     public void update(long l) {
         if (this.isDeath()) {
@@ -127,35 +98,39 @@ public class Oneal extends Enemy {
             }
         }
 
-        int curDis = 100000000;
+        boolean findBomber = false;
         int newX = this.x;
         int newY = this.y;
 
-        this.speed =(int) (Math.random()*(maxSpeed + 1));
+        for (int i = 0; i < 4; ++i) {
+            int curX = this.x;
+            int curY = this.y;
+            while (canMove(curX, curY)) {
+                Rectangle2D curRect = new Rectangle2D(curX, curY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 
-        Collections.shuffle(randomDir);
+                if (curRect.intersects(BombermanGame.player.getX(), BombermanGame.player.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                    newX = this.x + this.speed * dirX[i];
+                    newY = this.y + this.speed * dirY[i];
+                    findBomber = true;
+                    break;
+                }
 
-        for (int id = 0; id < 4; ++id) {
-            int i = randomDir.get(id);
-            int tempX = this.x + this.speed * dirX[i];
-            int tempY = this.y + this.speed * dirY[i];
-
-            if (curDis > d[tempX][tempY]) {
-                curDis = d[tempX][tempY];
-                this.dir = i;
-                newX = tempX;
-                newY = tempY;
+                curX += this.speed * dirX[i];
+                curY += this.speed * dirY[i];
+            }
+            if (findBomber) {
+                break;
             }
         }
-
-        if (curDis == 100000000) {
+        if (!findBomber) {
+            Collections.shuffle(randomDir);
             if (this.x % 32 == 0 && this.y % 32 == 0) {
                 this.dir = (int) (Math.random() * 4);
             }
             newX = this.x + dirX[this.dir] * this.speed;
             newY = this.y + dirY[this.dir] * this.speed;
             if (!canMove(newX, newY)) {
-                for (int id = 0; id < 4; ++id) {
+                for (int id = 0; id < 4; id++) {
                     int i = randomDir.get(id);
                     newX = this.x + dirX[i] * this.speed;
                     newY = this.y + dirY[i] * this.speed;
@@ -166,7 +141,6 @@ public class Oneal extends Enemy {
                 }
             }
         }
-
 
         this.setX(newX);
         this.setY(newY);
