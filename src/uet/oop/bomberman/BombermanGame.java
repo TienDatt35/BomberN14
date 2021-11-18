@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class BombermanGame extends Application {
-    
+
     public static final int WIDTH = 20;
     public static final int HEIGHT = 15;
 
@@ -39,7 +39,7 @@ public class BombermanGame extends Application {
     public static Bomber player;
     public static String[] map = {"Level1.txt", "Level2.txt", "Level3.txt"};
 
-//    char[][] mapMatrix;
+    //    char[][] mapMatrix;
 //    int numberLevel = 0;
 //    int numberRow = 0;
 //    int numberColumn = 0;

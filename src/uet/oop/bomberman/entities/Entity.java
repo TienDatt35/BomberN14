@@ -7,17 +7,18 @@ import uet.oop.bomberman.graphics.Sprite;
 public abstract class Entity {
     //Tọa độ X tính từ góc trái trên trong Canvas
     protected int x;
+
     //Tọa độ Y tính từ góc trái trên trong Canvas
     protected int y;
 
     protected Image img;
-    protected int dir;
-    protected int curState;
+    protected int dir; //Hướng
+    protected int curState; //Trạng thái của ảnh
     protected boolean death;
-    protected long timeChange;
+    protected long timeChange; //Thời điểm update
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
-    public Entity( int x, int y, Image img) {
+    public Entity(int x, int y, Image img) {
         this.x = x * Sprite.SCALED_SIZE;
         this.y = y * Sprite.SCALED_SIZE;
         this.img = img;
@@ -93,9 +94,9 @@ public abstract class Entity {
         return y;
     }
 
-
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
     }
+
     public abstract void update(long l);
 }
