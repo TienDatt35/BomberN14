@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Bomber extends Entity {
 
     private static int bombLimit = 1;
-    private static int speed = 2;
+    private static int speed = 1;
     public static ArrayList<ArrayList<Image>> constImage = new ArrayList<>();
     private boolean upSpeed;
     private int life;
@@ -25,7 +25,7 @@ public class Bomber extends Entity {
     }
 
     public static void resetSpeed() {
-        speed = 2;
+        speed = 1;
     }
 
 
@@ -114,48 +114,71 @@ public class Bomber extends Entity {
     }
 
     int moveX(int curDir, Entity entity) {
-        if (curDir == 1 || curDir == 3) {
-            return 0;
-        }
         switch (curDir) {
-            case (0):
-                if (x < entity.getX()) {
+            case 1:
+            case 3:
+                return 0;
+            case 0:
+                if (x < entity.getX() && entity.getX() - x > 10) {
                     return -1;
                 }
-                if (x > entity.getX()) {
+                if (x > entity.getX() && x - entity.getX() > 20) {
                     return 1;
                 }
                 break;
-            case (2):
-                if (x < entity.getX()) {
+            case 2:
+                if (x < entity.getX() && entity.getX() - x > 10) {
                     return -1;
                 }
-                if (x > entity.getX()) {
+                if (x > entity.getX() && x - entity.getX() > 20) {
                     return 1;
                 }
                 break;
         }
+//        if (curDir == 1 || curDir == 3) {
+//            return 0;
+//        }
+//        switch (curDir) {
+//            case (0):
+//                if (x < entity.getX() && entity.getX() - x > 10) {
+//                    System.out.println(1);
+//                    return -1;
+//                }
+//                if (x > entity.getX() && x - entity.getX() > 20) {
+//                    return 1;
+//                }
+//                break;
+//            case (2):
+//                if (x < entity.getX() && entity.getX() - x > 10) {
+//                    System.out.println(2);
+//                    return -1;
+//                }
+//                if (x > entity.getX() && x - entity.getX() > 20) {
+//                    return 1;
+//                }
+//                break;
+//        }
         return 0;
     }
 
     int moveY(int curDir, Entity entity) {
-        if (curDir == 0 || curDir == 2) {
-            return 0;
-        }
         switch (curDir) {
+            case 0:
+            case 2:
+                return 0;
             case (1):
-                if (y > entity.getY()) {
+                if (y > entity.getY() && y - entity.getY() > 20) {
                     return 1;
                 }
-                if (y < entity.getY()) {
+                if (y < entity.getY() && entity.getY() - y > 20) {
                     return -1;
                 }
                 break;
             case (3):
-                if (y > entity.getY()) {
+                if (y > entity.getY() && y - entity.getY() > 20) {
                     return 1;
                 }
-                if (y < entity.getY()) {
+                if (y < entity.getY() && entity.getY() - y > 20) {
                     return -1;
                 }
                 break;

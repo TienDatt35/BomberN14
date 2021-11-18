@@ -42,11 +42,10 @@ public class BombermanGame extends Application {
     public static Bomber player;
     public static String[] map = {"Level1.txt", "Level2.txt", "Level3.txt"};
 
-    static Entity bomberman;
-    char[][] mapMatrix;
-    int numberLevel = 0;
-    int numberRow = 0;
-    int numberColumn = 0;
+//    char[][] mapMatrix;
+//    int numberLevel = 0;
+//    int numberRow = 0;
+//    int numberColumn = 0;
     public static int bomberDirection = -1;
     public static boolean dropBomb = false;
     public static boolean preDropBomb = false;
@@ -72,46 +71,46 @@ public class BombermanGame extends Application {
 //        Minvo.load();
     }
 
-    private void createMapFromFile() {
-//        String filePath = "C:\\Users\\Huyen\\Desktop\\Hai\\UET\\hoc\\OOP\\bomberman-starter-starter-2\\res\\levels\\level1.txt";
-        String filePath = "res/levels/Level1.txt";
-        try {
-            File file = new File(filePath);
-            FileReader fr = new FileReader(file);
-            BufferedReader br = new BufferedReader(fr);
-//            StringBuffer sb = new StringBuffer();
-            String line;
-
-            if ((line = br.readLine()) != null) {
-                String[] tokens = line.split("\\s");
-                numberLevel = Integer.parseInt(tokens[0]);
-                numberRow = Integer.parseInt(tokens[1]);
-                numberColumn = Integer.parseInt(tokens[2]);
-            }
-            if (numberLevel < 1 || (numberRow < 1 && numberColumn < 1)) {
-                return;
-            }
-
-            mapMatrix = new char[numberRow][numberColumn];
-            int countRow = -1;
-            while ((line = br.readLine()) != null && line.startsWith("#")) {
-                countRow = countRow + 1;
-                for (int i = 0; i < line.length(); i++) {
-                    mapMatrix[countRow][i] = line.charAt(i);
-                }
-            }
-            for (int i = 0; i < numberRow; i++) {
-                for (int j = 0; j < numberColumn; j++) {
-                    System.out.print(mapMatrix[i][j]);
-                }
-                System.out.print("\n");
-            }
-
-            fr.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void createMapFromFile() {
+////        String filePath = "C:\\Users\\Huyen\\Desktop\\Hai\\UET\\hoc\\OOP\\bomberman-starter-starter-2\\res\\levels\\level1.txt";
+//        String filePath = "res/levels/Level1.txt";
+//        try {
+//            File file = new File(filePath);
+//            FileReader fr = new FileReader(file);
+//            BufferedReader br = new BufferedReader(fr);
+////            StringBuffer sb = new StringBuffer();
+//            String line;
+//
+//            if ((line = br.readLine()) != null) {
+//                String[] tokens = line.split("\\s");
+//                numberLevel = Integer.parseInt(tokens[0]);
+//                numberRow = Integer.parseInt(tokens[1]);
+//                numberColumn = Integer.parseInt(tokens[2]);
+//            }
+//            if (numberLevel < 1 || (numberRow < 1 && numberColumn < 1)) {
+//                return;
+//            }
+//
+//            mapMatrix = new char[numberRow][numberColumn];
+//            int countRow = -1;
+//            while ((line = br.readLine()) != null && line.startsWith("#")) {
+//                countRow = countRow + 1;
+//                for (int i = 0; i < line.length(); i++) {
+//                    mapMatrix[countRow][i] = line.charAt(i);
+//                }
+//            }
+//            for (int i = 0; i < numberRow; i++) {
+//                for (int j = 0; j < numberColumn; j++) {
+//                    System.out.print(mapMatrix[i][j]);
+//                }
+//                System.out.print("\n");
+//            }
+//
+//            fr.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void makeMap(String fileName) {
         try {
@@ -136,10 +135,8 @@ public class BombermanGame extends Application {
 
     @Override
     public void start(Stage stage) {
-//        bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
         // Tao Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
-//        canvas = new Canvas(Sprite.SCALED_SIZE * numberColumn, Sprite.SCALED_SIZE * numberRow);
         gc = canvas.getGraphicsContext2D();
 
         // Tao root container
@@ -212,8 +209,6 @@ public class BombermanGame extends Application {
             }
         };
         timer.start();
-//        Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-//        entities.add(bomberman);
     }
 
     public void clearAll() {
@@ -325,7 +320,7 @@ public class BombermanGame extends Application {
         for (int i = 0; i < m; i++) {
             String S = objReader.nextLine();
             for (int j = 0; j < n; j++) {
-                Entity object;
+//                Entity object;
                 char c = S.charAt(j);
                 if (Character.compare(c, '#') == 0) {
                     stillObjects.add(new Wall(j, i, Sprite.wall.getFxImage()));
@@ -390,8 +385,6 @@ public class BombermanGame extends Application {
     }
 
     public void update(long l) {
-//        entities.forEach(Entity::update);
-//        entities.forEach(g -> g.render(gc));
 //        for (int i = 0; i < bombs.size(); ++i) {
 //            Bomb b = bombs.get(i);
 //            setBackground(b);
