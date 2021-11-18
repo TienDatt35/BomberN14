@@ -34,8 +34,8 @@ public class BombermanGame extends Application {
 //    public static List<Enemy> enemies = new ArrayList<>();
 //    public static List<Item> items = new ArrayList<>();
 //    public static List<Wall> stillObjects = new ArrayList<>();
-//    public static List<Flame> flames = new ArrayList<>();
-//    public static List<Bomb> bombs = new ArrayList<>();
+    public static List<Flame> flames = new ArrayList<>();
+    public static List<Bomb> bombs = new ArrayList<>();
 
     static String path = System.getProperty("user.dir") + "/res/";
     static Entity background = new Grass(0, 0, Sprite.grass.getFxImage());
