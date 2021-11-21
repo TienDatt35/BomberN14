@@ -153,9 +153,11 @@ public class Bomb extends Entity {
         }
         if (l >= this.timeChange) {
             ++curState;
+            //Sau mỗi lần update thì tăng curState để đổi hoạt ảnh của bom
             this.timeChange += 400000000;
         }
         if (curState == 5) {
+            //Chạy hết 5 hoạt ảnh thì cho nổ
             curState = -1;
             this.death = true;
             addFlame(l);

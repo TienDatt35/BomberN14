@@ -34,9 +34,11 @@ public class Brick extends Entity {
     @Override
     public void update(long l) {
         if (this.isDeath()) {
+            //Sau khi bị phá sẽ chạy hoạt ảnh
             if (l >= timeChange) {
                 timeChange += 200000000;
                 ++curState;
+                //Sau mỗi lần update thì tăng curState để đổi hoạt ảnh của tường
                 if (curState == 3) {
                     return;
                 }
