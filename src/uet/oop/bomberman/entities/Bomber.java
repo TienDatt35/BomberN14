@@ -158,23 +158,26 @@ public class Bomber extends Entity {
         //Tạo khối tại vị trí vừa đi qua
         Rectangle2D initRect = new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 //      bomb
-//        for (Bomb bomb : BombermanGame.bombs) {
-//            if (!rect.intersects(bomb.getX(), bomb.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-//                continue;
-//            }
-//            if (initRect.intersects(bomb.getX(), bomb.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-//                continue;
-//            }
-//
-//            if (!meetBlock) {
-//                meetBlock = true;
-//            }
-//            aX += moveX(curDir, bomb);
-//            aY += moveY(curDir, bomb);
-//        }
+        for (Bomb bomb : BombermanGame.bombs) {
+            if (!rect.intersects(bomb.getX(), bomb.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                //Kiểm tra vị trí di chuyển tới
+                continue;
+            }
+            if (initRect.intersects(bomb.getX(), bomb.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                //Kiểm tra vị trí vừa đi qua
+                continue;
+            }
+
+            if (!meetBlock) {
+                meetBlock = true;
+            }
+            aX += moveX(curDir, bomb);
+            aY += moveY(curDir, bomb);
+        }
 //      wall
         for (Wall wall : BombermanGame.stillObjects) {
             if (!rect.intersects(wall.getX(), wall.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                //Kiểm tra vị trí di chuyển tới
                 continue;
             }
             if (meetBlock == false) {
@@ -186,6 +189,7 @@ public class Bomber extends Entity {
 //      brick
         for (Brick brick : BombermanGame.bricks) {
             if (!rect.intersects(brick.getX(), brick.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                //Kiểm tra vị trí di chuyển tới
                 continue;
             }
             if (!meetBlock) {
@@ -243,32 +247,59 @@ public class Bomber extends Entity {
     public void getBonus() {
         Rectangle2D rect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
         for (Item i : BombermanGame.items) {
+            //Tường bị phá thì item mở và hiện ra
             if (!i.isOpen() || i.isDeath()) continue;
             if (rect.intersects(i.getX(), i.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                //Nếu bomber chạm vào sẽ nhận đc item
                 if (i.getType() == 4) {
                     if (BombermanGame.enemies.size() == 0) {
+                        //Nếu enemy bị tiêu diệt hết thì win
                         BombermanGame.winGame = true;
 //                        BombermanGame.playSound(BombermanGame.clipExitOpen);
                     }
                     return;
                 }
-
+                //Item bị xóa
                 i.setDeath(true);
 //                BombermanGame.playSound(BombermanGame.clipitemGet);
                 switch (i.getType()) {
-                    case (3):
-                        this.setUpSpeed(true);
+                    case (1):
+                        this.upLimitBomb();
                         break;
                     case (2):
                         Bomb.upBombLen();
                         break;
-                    case (1):
-                        this.upLimitBomb();
+                    case (3):
+                        this.setUpSpeed(true);
                         break;
                 }
                 return;
             }
         }
+    }
+
+    public boolean touchFlameOrEnemy(long l) {
+        //Tạo khối để kiểm tra va chạm
+        Rectangle2D rect = new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        for (Flame f : BombermanGame.flames) {
+            //Nếu chạm vào flame thì trả về true
+            if (rect.intersects(f.getX(), f.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                return true;
+            }
+        }
+        for (Enemy e : BombermanGame.enemies) {
+            if (!e.isDeath()) {
+                //Nếu chạm vào enemy còn sống thì trả về true
+                if (rect.intersects(e.getX(), e.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static void resetSpeed() {
+        speed = 1;
     }
 
     public void setUpSpeed(boolean upSpeed) {
@@ -283,16 +314,12 @@ public class Bomber extends Entity {
         speed = Math.min(speed * 2, 32);
     }
 
-    public void upLimitBomb() {
-        ++bombLimit;
-    }
-
     public static void resetBombLimit() {
         bombLimit = 1;
     }
 
-    public static void resetSpeed() {
-        speed = 1;
+    public void upLimitBomb() {
+        ++bombLimit;
     }
 
     public void decLife() {
@@ -323,6 +350,7 @@ public class Bomber extends Entity {
 
     @Override
     public void update(long l) {
+        //Nếu chết thì hồi sinh
         if (this.isDeath()) {
             if (l >= this.getTimeChange()) {
                 this.addTimeChange(400000000);
@@ -339,43 +367,51 @@ public class Bomber extends Entity {
             return;
         }
 
-//        if (touchFlameOrEnemy(l)) {
-//            this.setDeath(true);
-//            this.setCurState(-1);
-//            this.setTimeChange(l);
-//            return;
-//        }
-
-        //Thả bom
-        if (BombermanGame.dropBomb == true && BombermanGame.preDropBomb == false) {
-            dropBomb(l);
+        //Kiểm tra xem có chạm vào quái hay flame hay không
+        if (touchFlameOrEnemy(l)) {
+            this.setDeath(true);
+            this.setCurState(-1);
+            this.setTimeChange(l);
+            return;
         }
 
-        // SPACE lasts ... ns
-        BombermanGame.preDropBomb = BombermanGame.dropBomb;
+        //Thả bom
+        if (BombermanGame.dropBomb == true) {
+            dropBomb(l);
+        }
+//        if (BombermanGame.dropBomb == true && BombermanGame.preDropBomb == false) {
+//            dropBomb(l);
+//        }
 
+        // SPACE lasts ... ns
+//        BombermanGame.preDropBomb = BombermanGame.dropBomb;
+
+        //Kiểm tra xem có upSpeed không
         this.upSpeed();
 
-        /* not move */
+        //Khi không nhận lệnh di chuyển từ bàn phím thì dừng hoạt ảnh tại lệnh cuối cùng
         if (BombermanGame.bomberDirection == -1) {
             this.setCurState(0);
             setImg(constImage.get(dir).get(curState));
             return;
         }
 
-        /* cal next direction */
+        //Hướng di chuyển tiếp theo
         int nxtDir = canMove(BombermanGame.bomberDirection);
-//        if (touchFlameOrEnemy(l)) {
-//            this.setDeath(true);
-//            this.setCurState(-1);
-//            this.setTimeChange(l);
-//            return;
-//        }
+        //Kiếm tra va chạm
+        if (touchFlameOrEnemy(l)) {
+            this.setDeath(true);
+            this.setCurState(-1);
+            this.setTimeChange(l);
+            return;
+        }
 
         if (nxtDir == this.getDir()) {
+            //Cùng hướng di chuyển cũ
             this.setCurState((this.getCurState() + 1) % 9);
             setImg(constImage.get(dir).get(curState / 3));
         } else {
+            //Hướng di chuyển mới
             this.setDir(nxtDir);
             this.setCurState(0);
             setImg(constImage.get(dir).get(curState));
