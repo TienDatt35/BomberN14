@@ -30,22 +30,22 @@ public class Bomb extends Entity {
 
     private boolean canMove(int x, int y, long l) {
         //Kiểm tra xung quanh bomb để tạo flame
-        javafx.geometry.Rectangle2D rect = new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-        for (Wall wall : BombermanGame.stillObjects) {
+        Rectangle2D rect = new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        for (int i = 0; i < BombermanGame.stillObjects.size(); i++) {
             //Nếu gặp tường thì false
-            if (rect.intersects(wall.getX(), wall.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (rect.intersects(BombermanGame.stillObjects.get(i).getX(), BombermanGame.stillObjects.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 return false;
             }
         }
-        for (Brick a : BombermanGame.bricks) {
+        for (int i = 0; i < BombermanGame.bricks.size(); i++) {
             //Nếu gặp brick thì phá
-            if (a.isDeath()) {
+            if (BombermanGame.bricks.get(i).isDeath()) {
                 continue;
             }
-            if (rect.intersects(a.getX(), a.getY(), Sprite.SCALED_SIZE,Sprite.SCALED_SIZE)) {
-                a.death = true;
-                a.curState = -1;
-                a.timeChange = l;
+            if (rect.intersects(BombermanGame.bricks.get(i).getX(), BombermanGame.bricks.get(i).getY(), Sprite.SCALED_SIZE,Sprite.SCALED_SIZE)) {
+                BombermanGame.bricks.get(i).death = true;
+                BombermanGame.bricks.get(i).curState = -1;
+                BombermanGame.bricks.get(i).timeChange = l;
                 return false;
             }
         }

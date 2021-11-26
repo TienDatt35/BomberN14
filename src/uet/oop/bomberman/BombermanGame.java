@@ -162,7 +162,7 @@ public class BombermanGame extends Application {
     public void clearAll() {
         bricks.clear();
         enemies.clear();
-//        items.clear();
+        items.clear();
         stillObjects.clear();
         flames.clear();
         bombs.clear();
@@ -312,32 +312,39 @@ public class BombermanGame extends Application {
     }
 
     public void render() {
-        for (Item i : items) {
-            if (!i.isOpen()) {
+        //Thêm item
+        for (int i = 0; i < BombermanGame.items.size(); i++) {
+            if (!BombermanGame.items.get(i).isOpen()) {
                 continue;
             }
-            if (i.isDeath()) {
-                setBackground(i);
+            if (BombermanGame.items.get(i).isDeath()) {
+                setBackground(BombermanGame.items.get(i));
             } else {
-                i.render(gc);
+                BombermanGame.items.get(i).render(gc);
             }
         }
 
-        for (Bomb b : bombs) {
-            b.render(gc);
+        //Thêm bomb
+        for (int i = 0; i < BombermanGame.bombs.size(); i++) {
+            BombermanGame.bombs.get(i).render(gc);
         }
 
-        for (Flame f : flames) {
-            f.render(gc);
+        //Thêm flame
+        for (int i = 0; i < BombermanGame.flames.size(); i++) {
+            BombermanGame.flames.get(i).render(gc);
         }
 
-        for (Brick e : bricks) {
-            e.render(gc);
-        }
-        for (Enemy e : enemies) {
-            e.render(gc);
+        //Thêm tường
+        for (int i = 0; i < BombermanGame.bricks.size(); i++) {
+            BombermanGame.bricks.get(i).render(gc);
         }
 
+        //Thêm quái
+        for (int i = 0; i < BombermanGame.enemies.size(); i++) {
+            BombermanGame.enemies.get(i).render(gc);
+        }
+
+        //Thêm nhân vật
         player.render(gc);
     }
 }
