@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Bomber extends Entity {
 
     private static int bombLimit = 1;
-    private static int speed = 1;
+    private static int speed = 2;
     public static ArrayList<ArrayList<Image>> constImage = new ArrayList<>();
     private boolean upSpeed;
     private int life;
@@ -158,12 +158,12 @@ public class Bomber extends Entity {
         //Tạo khối tại vị trí vừa đi qua
         Rectangle2D initRect = new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 //      bomb
-        for (Bomb bomb : BombermanGame.bombs) {
-            if (!rect.intersects(bomb.getX(), bomb.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+        for (int i = 0; i < BombermanGame.bombs.size(); i++) {
+            if (!rect.intersects(BombermanGame.bombs.get(i).getX(), BombermanGame.bombs.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 //Kiểm tra vị trí di chuyển tới
                 continue;
             }
-            if (initRect.intersects(bomb.getX(), bomb.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (initRect.intersects(BombermanGame.bombs.get(i).getX(), BombermanGame.bombs.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 //Kiểm tra vị trí vừa đi qua
                 continue;
             }
@@ -171,33 +171,34 @@ public class Bomber extends Entity {
             if (!meetBlock) {
                 meetBlock = true;
             }
-            aX += moveX(curDir, bomb);
-            aY += moveY(curDir, bomb);
+            aX += moveX(curDir, BombermanGame.bombs.get(i));
+            aY += moveY(curDir, BombermanGame.bombs.get(i));
         }
 //      wall
-        for (Wall wall : BombermanGame.stillObjects) {
-            if (!rect.intersects(wall.getX(), wall.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+        for (int i = 0; i < BombermanGame.stillObjects.size(); i++) {
+            if (!rect.intersects(BombermanGame.stillObjects.get(i).getX(), BombermanGame.stillObjects.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 //Kiểm tra vị trí di chuyển tới
                 continue;
             }
             if (meetBlock == false) {
                 meetBlock = true;
             }
-            aX += moveX(curDir, wall);
-            aY += moveY(curDir, wall);
+            aX += moveX(curDir, BombermanGame.stillObjects.get(i));
+            aY += moveY(curDir, BombermanGame.stillObjects.get(i));
         }
 //      brick
-        for (Brick brick : BombermanGame.bricks) {
-            if (!rect.intersects(brick.getX(), brick.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+        for (int i = 0; i < BombermanGame.bricks.size(); i++) {
+            if (!rect.intersects(BombermanGame.bricks.get(i).getX(), BombermanGame.bricks.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 //Kiểm tra vị trí di chuyển tới
                 continue;
             }
             if (!meetBlock) {
                 meetBlock = true;
             }
-            aX += moveX(curDir, brick);
-            aY += moveY(curDir, brick);
+            aX += moveX(curDir, BombermanGame.bricks.get(i));
+            aY += moveY(curDir, BombermanGame.bricks.get(i));
         }
+
         if (!meetBlock) { /// take bonus later
             x = newX;
             y = newY;
@@ -217,9 +218,7 @@ public class Bomber extends Entity {
         if (aY == 1) {
             return 2;
         }
-//        if (aY == -1) {
         return 0;
-//        }
     }
 
     void dropBomb(long l) {
@@ -228,12 +227,44 @@ public class Bomber extends Entity {
             return;
         }
         //Xử lí sai số do không đứng giữa ô
-        int xb = (x / 32);
-        int yb = (y / 32);
+        int xb;
+        int yb;
+        if (this.dir == 1) {
+            if (x % 32 > 20) {
+                xb = x / 32 + 1;
+            } else {
+                xb = x / 32;
+            }
+        } else if (this.dir == 3) {
+            if (x % 32 <= 20) {
+                xb = x / 32;
+            } else {
+                xb = x / 32 + 1;
+            }
+        } else {
+            xb = x / 32;
+        }
+
+        if (this.dir == 0) {
+            if (y % 32 > 16) {
+                yb = y / 32 + 1;
+            } else {
+                yb = y / 32;
+            }
+        } else if (this.dir == 2) {
+            if (y % 32 <= 16) {
+                yb = y / 32;
+            } else {
+                yb = y / 32 + 1;
+            }
+        } else {
+            yb = y / 32;
+        }
+
         Rectangle2D rect = new Rectangle2D(xb * Sprite.SCALED_SIZE, yb * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-        for (Bomb b : BombermanGame.bombs) {
+        for (int i = 0; i < BombermanGame.bombs.size(); i++) {
             //Kiểm tra nếu tại vị trí có bom thì không thể đặt thêm bom
-            if (rect.intersects(b.getX(), b.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (rect.intersects(BombermanGame.bombs.get(i).getX(), BombermanGame.bombs.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 return;
             }
         }
@@ -246,12 +277,12 @@ public class Bomber extends Entity {
 
     public void getBonus() {
         Rectangle2D rect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-        for (Item i : BombermanGame.items) {
+        for (int i = 0; i < BombermanGame.items.size(); i++) {
             //Tường bị phá thì item mở và hiện ra
-            if (!i.isOpen() || i.isDeath()) continue;
-            if (rect.intersects(i.getX(), i.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (!BombermanGame.items.get(i).isOpen() || BombermanGame.items.get(i).isDeath()) continue;
+            if (rect.intersects(BombermanGame.items.get(i).getX(), BombermanGame.items.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 //Nếu bomber chạm vào sẽ nhận đc item
-                if (i.getType() == 4) {
+                if (BombermanGame.items.get(i).getType() == 4) {
                     if (BombermanGame.enemies.size() == 0) {
                         //Nếu enemy bị tiêu diệt hết thì win
                         BombermanGame.winGame = true;
@@ -260,9 +291,9 @@ public class Bomber extends Entity {
                     return;
                 }
                 //Item bị xóa
-                i.setDeath(true);
+                BombermanGame.items.get(i).setDeath(true);
 //                BombermanGame.playSound(BombermanGame.clipitemGet);
-                switch (i.getType()) {
+                switch (BombermanGame.items.get(i).getType()) {
                     case (1):
                         this.upLimitBomb();
                         break;
@@ -281,16 +312,16 @@ public class Bomber extends Entity {
     public boolean touchFlameOrEnemy(long l) {
         //Tạo khối để kiểm tra va chạm
         Rectangle2D rect = new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-        for (Flame f : BombermanGame.flames) {
+        for (int i = 0; i < BombermanGame.flames.size(); i++) {
             //Nếu chạm vào flame thì trả về true
-            if (rect.intersects(f.getX(), f.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (rect.intersects(BombermanGame.flames.get(i).getX(), BombermanGame.flames.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 return true;
             }
         }
-        for (Enemy e : BombermanGame.enemies) {
-            if (!e.isDeath()) {
+        for (int i = 0; i < BombermanGame.enemies.size(); i++) {
+            if (!BombermanGame.enemies.get(i).isDeath()) {
                 //Nếu chạm vào enemy còn sống thì trả về true
-                if (rect.intersects(e.getX(), e.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                if (rect.intersects(BombermanGame.enemies.get(i).getX(), BombermanGame.enemies.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                     return true;
                 }
             }
@@ -299,7 +330,7 @@ public class Bomber extends Entity {
     }
 
     public static void resetSpeed() {
-        speed = 1;
+        speed = 2;
     }
 
     public void setUpSpeed(boolean upSpeed) {
