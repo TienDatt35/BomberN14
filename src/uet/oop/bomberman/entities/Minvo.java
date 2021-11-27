@@ -7,26 +7,25 @@ import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class Minvo extends Enemy {
     public static ArrayList <ArrayList<Image> > constImage = new ArrayList<>();
     public static void load() {
-        //up
+        // lên
         constImage.add(new ArrayList<Image>());
-        //right
+        // phải
         constImage.add(new ArrayList<Image>());
         constImage.get(1).add(Sprite.minvo_right1.getFxImage());
         constImage.get(1).add(Sprite.minvo_right2.getFxImage());
         constImage.get(1).add(Sprite.minvo_right3.getFxImage());
-        //down
+        // xuống
         constImage.add(new ArrayList<Image>());
-        //left
+        // trái
         constImage.add(new ArrayList<Image>());
         constImage.get(3).add(Sprite.minvo_left1.getFxImage());
         constImage.get(3).add(Sprite.minvo_left2.getFxImage());
         constImage.get(3).add(Sprite.minvo_left3.getFxImage());
-        /// dead
+        // chết
         constImage.add(new ArrayList<Image>());
         constImage.get(4).add(Sprite.minvo_dead.getFxImage());
         constImage.get(4).add(Sprite.mob_dead1.getFxImage());
@@ -43,17 +42,6 @@ public class Minvo extends Enemy {
         Rectangle2D rect = new Rectangle2D(newX, newY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
         Rectangle2D initRect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 
-        for(int i = 0; i < BombermanGame.bombs.size(); i++) {
-            double tmpX = BombermanGame.bombs.get(i).getX();
-            double tmpY = BombermanGame.bombs.get(i).getY();
-            if (initRect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                continue;
-            }
-            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                return false;
-            }
-        }
-
         for(int i = 0; i < BombermanGame.stillObjects.size(); i++) {
             double tmpX = BombermanGame.stillObjects.get(i).getX();
             double tmpY = BombermanGame.stillObjects.get(i).getY();
@@ -69,6 +57,18 @@ public class Minvo extends Enemy {
                 return false;
             }
         }
+
+        for(int i = 0; i < BombermanGame.bombs.size(); i++) {
+            double tmpX = BombermanGame.bombs.get(i).getX();
+            double tmpY = BombermanGame.bombs.get(i).getY();
+            if (initRect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                continue;
+            }
+            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -85,27 +85,15 @@ public class Minvo extends Enemy {
             }
             return;
         }
-        Rectangle2D rect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-
-        for (int i = 0; i < BombermanGame.flames.size(); i++) {
-            double tmpX = BombermanGame.flames.get(i).getX();
-            double tmpY = BombermanGame.flames.get(i).getY();
-            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                this.setDeath(true);
-                this.curState = -1;
-                this.timeChange = l;
-                return;
-            }
-        }
 
         boolean findBomber = false;
         int newX = this.x;
         int newY = this.y;
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 3; i >= 0; i--) {
             int curX = this.x;
             int curY = this.y;
-            while (canMove(curX, curY)) {
+            while (canMove(curX, curY) == true) {
                 Rectangle2D curRect = new Rectangle2D(curX, curY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 
                 if (curRect.intersects(BombermanGame.player.getX(), BombermanGame.player.getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
@@ -123,14 +111,14 @@ public class Minvo extends Enemy {
             }
         }
         if (!findBomber) {
-            Collections.shuffle(randomDir);
             if (this.x % 32 == 0 && this.y % 32 == 0) {
                 this.dir = (int) (Math.random() * 4);
             }
             newX = this.x + dirX[this.dir] * this.speed;
             newY = this.y + dirY[this.dir] * this.speed;
-            if (!canMove(newX, newY)) {
-                for (int id = 0; id < 4; id++) {
+            if (canMove(newX, newY) == false) {
+                Collections.shuffle(randomDir);
+                for (int id = 3; id >= 0; id--) {
                     int i = randomDir.get(id);
                     newX = this.x + dirX[i] * this.speed;
                     newY = this.y + dirY[i] * this.speed;
@@ -154,5 +142,18 @@ public class Minvo extends Enemy {
             this.imgDir = 3;
         }
         this.img = constImage.get(this.imgDir).get(this.curState / 3);
+
+        Rectangle2D rect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+
+        for (int i = 0; i < BombermanGame.flames.size(); i++) {
+            double tmpX = BombermanGame.flames.get(i).getX();
+            double tmpY = BombermanGame.flames.get(i).getY();
+            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                this.setDeath(true);
+                this.curState = -1;
+                this.timeChange = l;
+                return;
+            }
+        }
     }
 }

@@ -1,13 +1,8 @@
 package uet.oop.bomberman.entities;
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.graphics.Sprite;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Enemy extends Entity {
     protected int speed; //Tốc độ
@@ -22,7 +17,7 @@ public class Enemy extends Entity {
         super(x, y, img);
         this.speed = 1;
         this.imgDir = 1;
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 3; i >= 0; i--) {
             randomDir.add(i);
         }
     }
