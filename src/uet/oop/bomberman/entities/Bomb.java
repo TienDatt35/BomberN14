@@ -14,7 +14,8 @@ public class Bomb extends Entity {
     public boolean killedByOtherBomb;
 
     public Bomb(int x, int y, Image img, long timeChange) {
-        super(x, y, img, timeChange);
+        super(x, y, img);
+        this.timeChange = timeChange;
         this.curState = -1;
         this.killedByOtherBomb = false;
     }
