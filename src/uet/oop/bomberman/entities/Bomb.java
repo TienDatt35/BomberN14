@@ -69,7 +69,7 @@ public class Bomb extends Entity {
         for (int i = 1; i <= len; ++i) {
             newX = this.x - i * Sprite.SCALED_SIZE;
             newY = this.y;
-            if (!canMove(newX, newY, l)) {
+            if (canMove(newX, newY, l) == false) {
                 //Kiểm tra nếu có vật thể thì không tạo flame
                 break;
             }
@@ -86,7 +86,7 @@ public class Bomb extends Entity {
         for (int i = 1; i <= len; ++i) {
             newX = this.x + i * Sprite.SCALED_SIZE;
             newY = this.y;
-            if (!canMove(newX, newY, l)) {
+            if (canMove(newX, newY, l) == false) {
                 //Kiểm tra nếu có vật thể thì không tạo flame
                 break;
             }
@@ -103,7 +103,7 @@ public class Bomb extends Entity {
         for (int i = 1; i <= len; ++i) {
             newX = this.x;
             newY = this.y - i * Sprite.SCALED_SIZE;
-            if (!canMove(newX, newY, l)) {
+            if (canMove(newX, newY, l) == false) {
                 //Kiểm tra nếu có vật thể thì không tạo flame
                 break;
             }
@@ -120,7 +120,7 @@ public class Bomb extends Entity {
         for (int i = 1; i <= len; ++i) {
             newX = this.x;
             newY = this.y + i * Sprite.SCALED_SIZE;
-            if (!canMove(newX, newY, l)) {
+            if (canMove(newX, newY, l) == false) {
                 //Kiểm tra nếu có vật thể thì không tạo flame
                 break;
             }

@@ -159,16 +159,16 @@ public class Bomber extends Entity {
         Rectangle2D initRect = new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 //      bomb
         for (int i = 0; i < BombermanGame.bombs.size(); i++) {
-            if (!rect.intersects(BombermanGame.bombs.get(i).getX(), BombermanGame.bombs.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (rect.intersects(BombermanGame.bombs.get(i).getX(), BombermanGame.bombs.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE) == false) {
                 //Kiểm tra vị trí di chuyển tới
                 continue;
             }
-            if (initRect.intersects(BombermanGame.bombs.get(i).getX(), BombermanGame.bombs.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (initRect.intersects(BombermanGame.bombs.get(i).getX(), BombermanGame.bombs.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE) == true) {
                 //Kiểm tra vị trí vừa đi qua
                 continue;
             }
 
-            if (!meetBlock) {
+            if (meetBlock == false) {
                 meetBlock = true;
             }
             aX += moveX(curDir, BombermanGame.bombs.get(i));
@@ -176,7 +176,7 @@ public class Bomber extends Entity {
         }
 //      wall
         for (int i = 0; i < BombermanGame.stillObjects.size(); i++) {
-            if (!rect.intersects(BombermanGame.stillObjects.get(i).getX(), BombermanGame.stillObjects.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (rect.intersects(BombermanGame.stillObjects.get(i).getX(), BombermanGame.stillObjects.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE) == false) {
                 //Kiểm tra vị trí di chuyển tới
                 continue;
             }
@@ -188,18 +188,18 @@ public class Bomber extends Entity {
         }
 //      brick
         for (int i = 0; i < BombermanGame.bricks.size(); i++) {
-            if (!rect.intersects(BombermanGame.bricks.get(i).getX(), BombermanGame.bricks.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (rect.intersects(BombermanGame.bricks.get(i).getX(), BombermanGame.bricks.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE) == false) {
                 //Kiểm tra vị trí di chuyển tới
                 continue;
             }
-            if (!meetBlock) {
+            if (meetBlock == false) {
                 meetBlock = true;
             }
             aX += moveX(curDir, BombermanGame.bricks.get(i));
             aY += moveY(curDir, BombermanGame.bricks.get(i));
         }
 
-        if (!meetBlock) { /// take bonus later
+        if (meetBlock == false) { /// take bonus later
             x = newX;
             y = newY;
             return curDir;
@@ -209,6 +209,7 @@ public class Bomber extends Entity {
         }
         x = x + aX * speed;
         y = y + aY * speed;
+
         if (aX == 1) {
             return 1;
         }
@@ -264,7 +265,7 @@ public class Bomber extends Entity {
         Rectangle2D rect = new Rectangle2D(xb * Sprite.SCALED_SIZE, yb * Sprite.SCALED_SIZE, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
         for (int i = 0; i < BombermanGame.bombs.size(); i++) {
             //Kiểm tra nếu tại vị trí có bom thì không thể đặt thêm bom
-            if (rect.intersects(BombermanGame.bombs.get(i).getX(), BombermanGame.bombs.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (rect.intersects(BombermanGame.bombs.get(i).getX(), BombermanGame.bombs.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE) == true) {
                 return;
             }
         }
@@ -293,18 +294,29 @@ public class Bomber extends Entity {
                 //Item bị xóa
                 BombermanGame.items.get(i).setDeath(true);
 //                BombermanGame.playSound(BombermanGame.clipitemGet);
-                switch (BombermanGame.items.get(i).getType()) {
-                    case (1):
-                        this.upLimitBomb();
-                        break;
-                    case (2):
-                        Bomb.upBombLen();
-                        break;
-                    case (3):
-                        this.setUpSpeed(true);
-                        break;
+                int tmpType = BombermanGame.items.get(i).getType();
+                if (tmpType == 1) {
+                    this.upLimitBomb();
+                }
+                if (tmpType == 2) {
+                    Bomb.upBombLen();
+                }
+                if (tmpType == 3) {
+                    this.setUpSpeed(true);
                 }
                 return;
+//                switch (BombermanGame.items.get(i).getType()) {
+//                    case (1):
+//                        this.upLimitBomb();
+//                        break;
+//                    case (2):
+//                        Bomb.upBombLen();
+//                        break;
+//                    case (3):
+//                        this.setUpSpeed(true);
+//                        break;
+//                }
+//                return;
             }
         }
     }
@@ -314,14 +326,14 @@ public class Bomber extends Entity {
         Rectangle2D rect = new Rectangle2D(x, y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
         for (int i = 0; i < BombermanGame.flames.size(); i++) {
             //Nếu chạm vào flame thì trả về true
-            if (rect.intersects(BombermanGame.flames.get(i).getX(), BombermanGame.flames.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+            if (rect.intersects(BombermanGame.flames.get(i).getX(), BombermanGame.flames.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE) == true) {
                 return true;
             }
         }
         for (int i = 0; i < BombermanGame.enemies.size(); i++) {
             if (!BombermanGame.enemies.get(i).isDeath()) {
                 //Nếu chạm vào enemy còn sống thì trả về true
-                if (rect.intersects(BombermanGame.enemies.get(i).getX(), BombermanGame.enemies.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                if (rect.intersects(BombermanGame.enemies.get(i).getX(), BombermanGame.enemies.get(i).getY(), Sprite.SCALED_SIZE, Sprite.SCALED_SIZE) == true) {
                     return true;
                 }
             }
