@@ -13,16 +13,21 @@ public class Oneal extends Enemy {
     public static ArrayList <ArrayList<Image> > constImage = new ArrayList<>();
 
     public static void load() {
+        // lên
         constImage.add(new ArrayList<>());
+        // phải
         constImage.add(new ArrayList<>());
         constImage.get(1).add(Sprite.oneal_right1.getFxImage());
         constImage.get(1).add(Sprite.oneal_right2.getFxImage());
         constImage.get(1).add(Sprite.oneal_right3.getFxImage());
+        // xuống
         constImage.add(new ArrayList<>());
+        // trái
         constImage.add(new ArrayList<>());
         constImage.get(3).add(Sprite.oneal_left1.getFxImage());
         constImage.get(3).add(Sprite.oneal_left2.getFxImage());
         constImage.get(3).add(Sprite.oneal_left3.getFxImage());
+        // chết
         constImage.add(new ArrayList<Image>());
         constImage.get(4).add(Sprite.oneal_dead.getFxImage());
         constImage.get(4).add(Sprite.mob_dead1.getFxImage());
@@ -38,12 +43,9 @@ public class Oneal extends Enemy {
         Rectangle2D rect = new Rectangle2D(newX, newY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
         Rectangle2D initRect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 
-        for(int i = 0; i < BombermanGame.bombs.size(); i++) {
-            double tmpX = BombermanGame.bombs.get(i).getX();
-            double tmpY = BombermanGame.bombs.get(i).getY();
-            if (initRect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                continue;
-            }
+        for(int i = 0; i < BombermanGame.bricks.size(); i++) {
+            double tmpX = BombermanGame.bricks.get(i).getX();
+            double tmpY = BombermanGame.bricks.get(i).getY();
             if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 return false;
             }
@@ -57,9 +59,12 @@ public class Oneal extends Enemy {
             }
         }
 
-        for(int i = 0; i < BombermanGame.bricks.size(); i++) {
-            double tmpX = BombermanGame.bricks.get(i).getX();
-            double tmpY = BombermanGame.bricks.get(i).getY();
+        for(int i = 0; i < BombermanGame.bombs.size(); i++) {
+            double tmpX = BombermanGame.bombs.get(i).getX();
+            double tmpY = BombermanGame.bombs.get(i).getY();
+            if (initRect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                continue;
+            }
             if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 return false;
             }
@@ -70,8 +75,10 @@ public class Oneal extends Enemy {
     public void minDis() {
         int n = Sprite.SCALED_SIZE * BombermanGame.WIDTH;
         int m = Sprite.SCALED_SIZE * BombermanGame.HEIGHT;
-        for (int i = n-1; i >= 0; i--) {
-            for(int j = m-1; j >= 0; j--) {
+
+        for(int i = 0; i < n; i++)
+        {
+            for(int j = 0; j < m; j++) {
                 d[i][j] = 100000000;
             }
         }
@@ -88,10 +95,10 @@ public class Oneal extends Enemy {
         while (top < bot) {
             int u = qX[top];
             int v = qY[top++];
-            for (int i = 0; i < 4; ++i) {
+            for (int i = 3; i >= 0; i--) {
                 int x = u + dirX[i];
                 int y = v + dirY[i];
-                if (x < 0 || y < 0 || x >= n || y >= m || !canMove(x, y) || d[x][y] != 100000000) {
+                if (!canMove(x, y) || d[x][y] != 100000000 || x < 0 || y < 0 || x >= n || y >= m) {
                     continue;
                 }
                 d[x][y] = d[u][v] + 1;
@@ -114,18 +121,6 @@ public class Oneal extends Enemy {
             }
             return;
         }
-        Rectangle2D rect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-
-        for (int i = 0; i < BombermanGame.flames.size(); i++) {
-            double tmpX = BombermanGame.flames.get(i).getX();
-            double tmpY = BombermanGame.flames.get(i).getY();
-            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                this.setDeath(true);
-                this.curState = -1;
-                this.timeChange = l;
-                return;
-            }
-        }
 
         int curDis = 100000000;
         int newX = this.x;
@@ -135,7 +130,7 @@ public class Oneal extends Enemy {
 
         Collections.shuffle(randomDir);
 
-        for (int id = 0; id < 4; ++id) {
+        for (int id = 3; id >= 0; id--) {
             int i = randomDir.get(id);
             int tempX = this.x + this.speed * dirX[i];
             int tempY = this.y + this.speed * dirY[i];
@@ -154,19 +149,19 @@ public class Oneal extends Enemy {
             }
             newX = this.x + dirX[this.dir] * this.speed;
             newY = this.y + dirY[this.dir] * this.speed;
-            if (!canMove(newX, newY)) {
-                for (int id = 0; id < 4; ++id) {
+            if (canMove(newX, newY) == false) {
+                Collections.shuffle(randomDir);
+                for (int id = 3; id >= 0; id--) {
                     int i = randomDir.get(id);
                     newX = this.x + dirX[i] * this.speed;
                     newY = this.y + dirY[i] * this.speed;
-                    if (canMove(newX, newY)) {
+                    if (canMove(newX, newY) == true) {
                         this.dir = i;
                         break;
                     }
                 }
             }
         }
-
 
         this.setX(newX);
         this.setY(newY);
@@ -180,5 +175,18 @@ public class Oneal extends Enemy {
             this.imgDir = 3;
         }
         this.img = constImage.get(this.imgDir).get(this.curState / 3);
+
+        Rectangle2D rect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+
+        for (int i = 0; i < BombermanGame.flames.size(); i++) {
+            double tmpX = BombermanGame.flames.get(i).getX();
+            double tmpY = BombermanGame.flames.get(i).getY();
+            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                this.setDeath(true);
+                this.curState = -1;
+                this.timeChange = l;
+                return;
+            }
+        }
     }
 }

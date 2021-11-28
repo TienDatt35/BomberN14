@@ -12,7 +12,8 @@ public class Flame extends Entity{
     public static ArrayList <ArrayList<Image>> constImage = new ArrayList<>();
 
     public Flame(int x, int y, Image img, int type, long timeChange) {
-        super(x, y, img, timeChange);
+        super(x, y, img);
+        this.timeChange = timeChange;
         this.type = type;
         this.curState = -1;
     }

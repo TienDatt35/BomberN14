@@ -13,21 +13,21 @@ public class Balloon extends Enemy {
     public static ArrayList<ArrayList<Image>> constImage = new ArrayList<>();
 
     public static void load() {
-        //up
+        // lên
         constImage.add(new ArrayList<Image>());
-        //right
+        // phải
         constImage.add(new ArrayList<Image>());
         constImage.get(1).add(Sprite.balloom_right1.getFxImage());
         constImage.get(1).add(Sprite.balloom_right2.getFxImage());
         constImage.get(1).add(Sprite.balloom_right3.getFxImage());
-        //down
+        // xuống
         constImage.add(new ArrayList<Image>());
-        //left
+        // trái
         constImage.add(new ArrayList<Image>());
         constImage.get(3).add(Sprite.balloom_left1.getFxImage());
         constImage.get(3).add(Sprite.balloom_left2.getFxImage());
         constImage.get(3).add(Sprite.balloom_left3.getFxImage());
-        /// dead
+        // chết
         constImage.add(new ArrayList<Image>());
         constImage.get(4).add(Sprite.balloom_dead.getFxImage());
         constImage.get(4).add(Sprite.mob_dead1.getFxImage());
@@ -43,20 +43,20 @@ public class Balloon extends Enemy {
         Rectangle2D rect = new Rectangle2D(newX, newY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
         Rectangle2D initRect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
 
+        for(int i = 0; i < BombermanGame.stillObjects.size(); i++) {
+            double tmpX = BombermanGame.stillObjects.get(i).getX();
+            double tmpY = BombermanGame.stillObjects.get(i).getY();
+            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                return false;
+            }
+        }
+
         for(int i = 0; i < BombermanGame.bombs.size(); i++) {
             double tmpX = BombermanGame.bombs.get(i).getX();
             double tmpY = BombermanGame.bombs.get(i).getY();
             if (initRect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 continue;
             }
-            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                return false;
-            }
-        }
-
-        for(int i = 0; i < BombermanGame.stillObjects.size(); i++) {
-            double tmpX = BombermanGame.stillObjects.get(i).getX();
-            double tmpY = BombermanGame.stillObjects.get(i).getY();
             if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
                 return false;
             }
@@ -88,20 +88,6 @@ public class Balloon extends Enemy {
             return;
         }
 
-        //Xử lý bom nổ quái
-        Rectangle2D rect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
-        for (int i = 0; i < BombermanGame.flames.size(); i++) {
-            double tmpX = BombermanGame.flames.get(i).getX();
-            double tmpY = BombermanGame.flames.get(i).getY();
-            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                this.setDeath(true);
-                this.curState = -1;
-                this.timeChange = l;
-                return;
-            }
-        }
-        // Đảo các hướng có sẵn của quái
-        Collections.shuffle(randomDir);
 
         //Lấy random hướng cho quái ở mỗi ô
         if (this.x % 32 == 0 && this.y % 32 == 0) {
@@ -112,6 +98,8 @@ public class Balloon extends Enemy {
         int newY = this.y + dirY[this.dir] * this.speed;
 
         if (canMove(newX, newY) == false) {
+            // Đảo các hướng có sẵn của quái
+            Collections.shuffle(randomDir);
             for (int id = 0; id < 4; ++id) {
                 int i = randomDir.get(id);
                 newX = this.x + dirX[i] * this.speed;
@@ -127,7 +115,7 @@ public class Balloon extends Enemy {
         this.setY(newY);
 
         curState += 1;
-        curState %= 9; // Có thể bỏ cái này , Đây là xử lý mượt
+        curState %= 9; // Đây là xử lý mượt
 
         if (this.dir == 1) {
             this.imgDir = 1;
@@ -136,5 +124,18 @@ public class Balloon extends Enemy {
             this.imgDir = 3;
         }
         this.img = constImage.get(this.imgDir).get(this.curState / 3);
+
+        //Xử lý bom nổ quái
+        Rectangle2D rect = new Rectangle2D(this.x, this.y, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE);
+        for (int i = 0; i < BombermanGame.flames.size(); i++) {
+            double tmpX = BombermanGame.flames.get(i).getX();
+            double tmpY = BombermanGame.flames.get(i).getY();
+            if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
+                this.setDeath(true);
+                this.curState = -1;
+                this.timeChange = l;
+                return;
+            }
+        }
     }
 }
