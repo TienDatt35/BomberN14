@@ -6,6 +6,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import uet.oop.bomberman.Audio.Audio;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 
@@ -273,7 +274,7 @@ public class Bomber extends Entity {
         Bomb newBomb = new Bomb(xb, yb, Sprite.bomb.getFxImage(), l);
         BombermanGame.bombs.add(newBomb);
         //Âm thanh bom
-//        BombermanGame.playSound(BombermanGame.clipBombSet);
+        Audio.playSound("sounds/Bomb_Set.wav");
     }
 
     public void getBonus() {
@@ -287,13 +288,13 @@ public class Bomber extends Entity {
                     if (BombermanGame.enemies.size() == 0) {
                         //Nếu enemy bị tiêu diệt hết thì win
                         BombermanGame.winGame = true;
-//                        BombermanGame.playSound(BombermanGame.clipExitOpen);
+                        Audio.playSound("sounds/Exit_Opens.wav");
                     }
                     return;
                 }
                 //Item bị xóa
                 BombermanGame.items.get(i).setDeath(true);
-//                BombermanGame.playSound(BombermanGame.clipitemGet);
+                Audio.playSound("sounds/Item_Get.wav");
                 int tmpType = BombermanGame.items.get(i).getType();
                 if (tmpType == 1) {
                     this.upLimitBomb();

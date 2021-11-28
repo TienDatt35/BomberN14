@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
+import uet.oop.bomberman.Audio.Audio;
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.graphics.Sprite;
 import javafx.scene.input.KeyEvent;
@@ -47,11 +48,20 @@ public class BombermanGame extends Application {
     public static int curMap = 0;
     public static boolean winGame = false;
 
-
     public static void main(String[] args) {
         loadAll();
+        Clip soundGame;
+        try {
+            soundGame = AudioSystem.getClip();
+            soundGame.open(AudioSystem.getAudioInputStream(new File(path + "sounds/soundGame.wav")));
+            soundGame.start();
+            soundGame.loop(soundGame.LOOP_CONTINUOUSLY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Application.launch(BombermanGame.class);
     }
+
 
     static void loadAll() {
         Brick.load();
@@ -262,7 +272,7 @@ public class BombermanGame extends Application {
         for (int i = bombs.size() - 1; i >= 0; --i) {
             Bomb b = bombs.get(i);
             if (b.isDeath()) {
-//                playSound(clipBombExploydes);
+                Audio.playSound("sounds/Bomb_Explodes.wav");
                 bombs.remove(i);
             }
         }
@@ -299,7 +309,7 @@ public class BombermanGame extends Application {
 //            e.update(l);
 //            if (e.isDeath() && e.getCurState() == 4) {
 //                enemies.remove(i);
-////                playSound(clipEnemyDead);
+////                Audio.playSound("sounds/Enemy_Dead.wav");
 //            }
 //        }
 
