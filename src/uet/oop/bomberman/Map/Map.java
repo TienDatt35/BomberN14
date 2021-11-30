@@ -24,8 +24,21 @@ public class Map {
         }
     }
 
+    public static void clearAll() {
+        BombermanGame.bricks.clear();
+        BombermanGame.enemies.clear();
+        BombermanGame.items.clear();
+        BombermanGame.stillObjects.clear();
+        BombermanGame.flames.clear();
+        BombermanGame.bombs.clear();
+        BombermanGame.bomberDirection = -1;
+        BombermanGame.dropBomb = false;
+        BombermanGame.preDropBomb = false;
+        BombermanGame.curIdBomb = -1;
+    }
+
     public static void createMap(String fileName) throws IOException {
-        BombermanGame.clearAll();
+        clearAll();
         Scanner objReader = new Scanner(new File(BombermanGame.path + "levels/" + fileName));
         int stage = objReader.nextInt();
         int m = objReader.nextInt();
