@@ -18,7 +18,6 @@ import javax.sound.sampled.Clip;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 import uet.oop.bomberman.Map.Map;
 
@@ -75,20 +74,6 @@ public class BombermanGame extends Application {
         Kondoria.load();
         Minvo.load();
     }
-
-
-//    public void makeMap(String fileName) {
-//        try {
-//            createMap(fileName);
-//            if (fileName.compareTo("Level1.txt") == 0) {
-//                Bomber.resetBombLimit();
-//                Bomber.resetSpeed();
-//                Bomb.resetLen();
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void sleep(int milis) {
         try {
@@ -171,87 +156,6 @@ public class BombermanGame extends Application {
         timer.start();
     }
 
-    public static void clearAll() {
-        bricks.clear();
-        enemies.clear();
-        items.clear();
-        stillObjects.clear();
-        flames.clear();
-        bombs.clear();
-        bomberDirection = -1;
-        dropBomb = false;
-        preDropBomb = false;
-        curIdBomb = -1;
-    }
-
-//    public void createMap(String fileName) throws IOException {
-//        clearAll();
-//        Scanner objReader = new Scanner(new File(path + "levels/" + fileName));
-//        int stage = objReader.nextInt();
-//        int m = objReader.nextInt();
-//        int n = objReader.nextInt();
-//        objReader.nextLine();
-//        for (int i = 0; i < m; i++) {
-//            String S = objReader.nextLine();
-//            for (int j = 0; j < n; j++) {
-////                Entity object;
-//                char c = S.charAt(j);
-//                if (Character.compare(c, '#') == 0) {
-//                    stillObjects.add(new Wall(j, i, Sprite.wall.getFxImage()));
-//                } else {
-//                    Grass newGrass = new Grass(j, i, Sprite.grass.getFxImage());
-//                    newGrass.render(gc);
-//
-//                    switch (c) {
-//                        case ('p'):
-//                            player = new Bomber(j, i, Sprite.player_right.getFxImage());
-//                            break;
-//                        case ('1'):
-//                            enemies.add(new Balloon(j, i, Sprite.balloom_left1.getFxImage()));
-//                            break;
-//                        case ('2'):
-//                            enemies.add(new Oneal(j, i, Sprite.oneal_left1.getFxImage()));
-//                            break;
-//                        case ('3'):
-//                            enemies.add(new Minvo(j, i, Sprite.minvo_left1.getFxImage()));
-//                            break;
-//                        case ('4'):
-//                            enemies.add(new Kondoria(j, i, Sprite.kondoria_left1.getFxImage()));
-//                            break;
-//                        case ('*'):
-//                            bricks.add(new Brick(j, i, Sprite.brick.getFxImage()));
-//                            break;
-//                        case ('x'):
-//                            items.add(new Item(j, i, Sprite.portal.getFxImage(), 4));
-//                            Brick X = new Brick(j, i, Sprite.brick.getFxImage());
-//                            X.setContainItem(items.size() - 1);
-//                            bricks.add(X);
-//                            break;
-//                        case ('s'):
-//                            items.add(new Item(j, i, Sprite.powerup_speed.getFxImage(), 3));
-//                            Brick Y = new Brick(j, i, Sprite.brick.getFxImage());
-//                            Y.setContainItem(items.size() - 1);
-//                            bricks.add(Y);
-//                            break;
-//                        case ('f'):
-//                            items.add(new Item(j, i, Sprite.powerup_flames.getFxImage(), 2));
-//                            Brick Z = new Brick(j, i, Sprite.brick.getFxImage());
-//                            Z.setContainItem(items.size() - 1);
-//                            bricks.add(Z);
-//                            break;
-//                        case ('b'):
-//                            items.add(new Item(j, i, Sprite.powerup_bombs.getFxImage(), 1));
-//                            Brick T = new Brick(j, i, Sprite.brick.getFxImage());
-//                            T.setContainItem(items.size() - 1);
-//                            bricks.add(T);
-//                            break;
-//                    }
-//                }
-//            }
-//        }
-//        stillObjects.forEach(g -> g.render(gc));
-//    }
-
     public void setBackground(Entity e) {
         background.setX(e.getX());
         background.setY(e.getY());
@@ -300,20 +204,20 @@ public class BombermanGame extends Application {
             }
         }
 
-//        boolean calcDis = false;
-//        for (int i = enemies.size() - 1; i >= 0; --i) {
-//            Enemy e = enemies.get(i);
-//            if (e instanceof Oneal && calcDis == false) {
-//                calcDis = true;
-//                ((Oneal) e).minDis();
-//            }
-//            setBackground(e);
-//            e.update(l);
-//            if (e.isDeath() && e.getCurState() == 4) {
-//                enemies.remove(i);
-////                Audio.playSound("sounds/Enemy_Dead.wav");
-//            }
-//        }
+        boolean calcDis = false;
+        for (int i = enemies.size() - 1; i >= 0; --i) {
+            Enemy e = enemies.get(i);
+            if (e instanceof Oneal && calcDis == false) {
+                calcDis = true;
+                ((Oneal) e).minDis();
+            }
+            setBackground(e);
+            e.update(l);
+            if (e.isDeath() && e.getCurState() == 4) {
+                enemies.remove(i);
+                Audio.playSound("sounds/Enemy_Dead.wav");
+            }
+        }
 
         setBackground(player);
         player.update(l);

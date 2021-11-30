@@ -98,7 +98,7 @@ public class Oneal extends Enemy {
             for (int i = 3; i >= 0; i--) {
                 int x = u + dirX[i];
                 int y = v + dirY[i];
-                if (!canMove(x, y) || d[x][y] != 100000000 || x < 0 || y < 0 || x >= n || y >= m) {
+                if (x < 0 || y < 0 || x >= n || y >= m || !canMove(x, y) || d[x][y] != 100000000 ) {
                     continue;
                 }
                 d[x][y] = d[u][v] + 1;
@@ -134,7 +134,9 @@ public class Oneal extends Enemy {
             int i = randomDir.get(id);
             int tempX = this.x + this.speed * dirX[i];
             int tempY = this.y + this.speed * dirY[i];
-
+            if (tempX < 0 || tempY < 0 || tempX >= Sprite.SCALED_SIZE * BombermanGame.WIDTH || tempY >= Sprite.SCALED_SIZE * BombermanGame.HEIGHT) {
+                continue;
+            }
             if (curDis > d[tempX][tempY]) {
                 curDis = d[tempX][tempY];
                 this.dir = i;
@@ -150,7 +152,6 @@ public class Oneal extends Enemy {
             newX = this.x + dirX[this.dir] * this.speed;
             newY = this.y + dirY[this.dir] * this.speed;
             if (canMove(newX, newY) == false) {
-                Collections.shuffle(randomDir);
                 for (int id = 3; id >= 0; id--) {
                     int i = randomDir.get(id);
                     newX = this.x + dirX[i] * this.speed;
@@ -182,7 +183,7 @@ public class Oneal extends Enemy {
             double tmpX = BombermanGame.flames.get(i).getX();
             double tmpY = BombermanGame.flames.get(i).getY();
             if (rect.intersects(tmpX, tmpY, Sprite.SCALED_SIZE, Sprite.SCALED_SIZE)) {
-                this.setDeath(true);
+                this.death = true;
                 this.curState = -1;
                 this.timeChange = l;
                 return;
