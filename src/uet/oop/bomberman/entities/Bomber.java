@@ -20,6 +20,7 @@ public class Bomber extends Entity {
     private boolean upSpeed;
     private int life;
     private boolean reborn;
+    public static int k = 0;
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
@@ -287,7 +288,10 @@ public class Bomber extends Entity {
                 if (BombermanGame.items.get(i).getType() == 4) {
                     if (BombermanGame.enemies.size() == 0) {
                         //Nếu enemy bị tiêu diệt hết thì win
-                        BombermanGame.winGame = true;
+                        if (k == 0){
+                            k = 1;
+                            BombermanGame.winGame = true;
+                        }
                         Audio.playSound("sounds/Exit_Opens.wav");
                     }
                     return;
