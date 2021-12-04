@@ -443,12 +443,6 @@ public class Bomber extends Entity {
         //Hướng di chuyển tiếp theo
         int nxtDir = canMove(BombermanGame.bomberDirection);
         //Kiếm tra va chạm
-        if (touchFlameOrEnemy(l)) {
-            this.setDeath(true);
-            this.setCurState(-1);
-            this.setTimeChange(l);
-            return;
-        }
 
         if (nxtDir == this.getDir()) {
             //Cùng hướng di chuyển cũ
