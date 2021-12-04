@@ -3,9 +3,11 @@ package uet.oop.bomberman;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import uet.oop.bomberman.Audio.Audio;
@@ -23,11 +25,14 @@ import uet.oop.bomberman.Map.Map;
 
 public class BombermanGame extends Application {
 
-    public static final int WIDTH = 20;
-    public static final int HEIGHT = 15;
+    public static final int WIDTH = 31;
+    public static final int HEIGHT = 13;
 
     public static GraphicsContext gc;
     private Canvas canvas;
+    private Canvas canvas1;
+    public static GraphicsContext gc1;
+
 
     public static List<Wall> stillObjects = new ArrayList<>();
     public static List<Brick> bricks = new ArrayList<>();
@@ -48,6 +53,9 @@ public class BombermanGame extends Application {
 
     public static int curMap = 0;
     public static boolean winGame = false;
+    public static final String TITLE = "Bomberman ";
+
+    public static int index = 0;
 
     public static void main(String[] args) {
         loadAll();
@@ -83,17 +91,48 @@ public class BombermanGame extends Application {
         }
     }
 
+    public void winGame() {
+        Image winImage;
+        try {
+            winImage = new javafx.scene.image.Image(new FileInputStream(path + "image/winGame.jpg"));
+            gc.drawImage(winImage, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void gameOver() {
+        Image winImage;
+        try {
+            winImage = new javafx.scene.image.Image(new FileInputStream(path + "image/gameOver.png"));
+            gc.drawImage(winImage, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void start(Stage stage) {
-        // Tao Canvas
+        // Tạo màn hình chơi
         canvas = new Canvas(Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
         gc = canvas.getGraphicsContext2D();
-
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
 
-        // Tao scene
+
+        //Tạo level
+        canvas1 = new Canvas(Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+        gc1 = canvas1.getGraphicsContext2D();
+        Group root1 = new Group();
+        root1.getChildren().add(canvas1);
+        Image image = new Image(String.valueOf(new File(path + "image/startGame.png")));
+        Image level1 = new Image(String.valueOf(new File(path + "image/level1.png")));
+        Image level2 = new Image(String.valueOf(new File(path + "image/level2.png")));
+        Image level3 = new Image(String.valueOf(new File(path + "image/level3.png")));
+        gc1.drawImage(image, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+
+        // Tao màn hình chính
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
@@ -117,6 +156,9 @@ public class BombermanGame extends Application {
                     dropBomb = true;
                     break;
                 }
+                case SHIFT: {
+                    winGame = true;
+                }
             }
         });
 
@@ -129,25 +171,71 @@ public class BombermanGame extends Application {
             }
         });
 
-        // Them scene vao stage
-        stage.setScene(scene);
+        //Màn hình level
+        Scene scene1 = new Scene(root1);
+        if (index == 0) {
+            stage.setScene(scene1);
+        } else {
+            stage.setScene(scene);
+        }
+        scene1.setOnKeyPressed(keyEvent -> {
+            switch (keyEvent.getCode()) {
+                case SHIFT: {
+                    System.out.println(1);
+                }
+                case ENTER: {
+                    index ++;
+                    if (index == 1) {
+                        if (curMap == 0) {
+                            gc1.drawImage(level1, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+                        }
+                        if (curMap == 1) {
+                            Bomber.k = 0;
+
+                            Map.makeMap(map[curMap]);
+                            stage.setScene(scene);
+                        }
+                        if (curMap == 2) {
+                            Map.makeMap(map[curMap]);
+                            stage.setScene(scene);
+                        }
+                    } else
+                    if (index == 2) {
+                        stage.setScene(scene);
+                    }
+                }
+            }
+        });
         stage.show();
-        Map.makeMap(map[0]);
+        stage.setTitle(TITLE);
+        Map.makeMap(map[curMap]);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 if (!player.notReallyDie()) {
-                    curMap = 0;
-                    sleep(1500);
-                    Map.makeMap(map[0]);
-                } else {
-                    if (winGame) {
-                        curMap = (curMap + 1) % 3;
-                        Map.makeMap(map[curMap]);
-                        winGame = false;
-                    }
+                    gameOver();
+                    return;
                 }
+                    if (winGame) {
+                        System.out.println(curMap);
+                        winGame = false;
+                        if (curMap == 2) {
+                            stop();
+                            winGame();
+                            return;
+                        }
+                        index = 0;
+                        if (curMap == 0) {
+                            curMap = 1;
+                            gc1.drawImage(level2, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+                            stage.setScene(scene1);
+                        } else if (curMap == 1) {
+                            gc1.drawImage(level3, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+                            stage.setScene(scene1);
+                            curMap = 2;
+                        }
+                    }
                 update(l);
                 render();
                 sleep(10);
