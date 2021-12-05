@@ -56,6 +56,7 @@ public class BombermanGame extends Application {
     public static final String TITLE = "Bomberman ";
 
     public static int index = 0;
+    public static int resetGame = 0;
 
     public static void main(String[] args) {
         loadAll();
@@ -95,17 +96,17 @@ public class BombermanGame extends Application {
         Image winImage;
         try {
             winImage = new javafx.scene.image.Image(new FileInputStream(path + "image/winGame.jpg"));
-            gc.drawImage(winImage, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+            gc1.drawImage(winImage, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     public void gameOver() {
-        Image winImage;
+        Image gameOver;
         try {
-            winImage = new javafx.scene.image.Image(new FileInputStream(path + "image/gameOver.png"));
-            gc.drawImage(winImage, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+            gameOver = new javafx.scene.image.Image(new FileInputStream(path + "image/gameOver.png"));
+            gc.drawImage(gameOver, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -132,6 +133,7 @@ public class BombermanGame extends Application {
         Image level3 = new Image(String.valueOf(new File(path + "image/level3.png")));
         gc1.drawImage(image, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
 
+        Scene scene1 = new Scene(root1);
         // Tao màn hình chính
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(keyEvent -> {
@@ -158,6 +160,10 @@ public class BombermanGame extends Application {
                 }
                 case SHIFT: {
                     winGame = true;
+                    break;
+                }
+                case BACK_SPACE: {
+                    resetGame = 1;
                 }
             }
         });
@@ -172,7 +178,6 @@ public class BombermanGame extends Application {
         });
 
         //Màn hình level
-        Scene scene1 = new Scene(root1);
         if (index == 0) {
             stage.setScene(scene1);
         } else {
@@ -180,7 +185,8 @@ public class BombermanGame extends Application {
         }
         scene1.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
-                case SHIFT: {
+                case BACK_SPACE: {
+                    resetGame = 1;
                     System.out.println(1);
                 }
                 case ENTER: {
@@ -191,16 +197,15 @@ public class BombermanGame extends Application {
                         }
                         if (curMap == 1) {
                             Bomber.k = 0;
-
                             Map.makeMap(map[curMap]);
                             stage.setScene(scene);
                         }
                         if (curMap == 2) {
+                            Bomber.k = 0;
                             Map.makeMap(map[curMap]);
                             stage.setScene(scene);
                         }
-                    } else
-                    if (index == 2) {
+                    } else if (index == 2) {
                         stage.setScene(scene);
                     }
                 }
@@ -217,15 +222,27 @@ public class BombermanGame extends Application {
                     gameOver();
                     return;
                 }
-                    if (winGame) {
+                if (resetGame == 1) {
+                    curMap = 0;
+                    resetGame = 0;
+                    winGame = false;
+                    Map.makeMap(map[curMap]);
+                    gc1.drawImage(level1, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+                    stage.setScene(scene1);
+//                    curMap--;
+//                    stage.setScene(scene);
+                }
+                if (winGame) {
                         System.out.println(curMap);
-                        winGame = false;
                         if (curMap == 2) {
-                            stop();
                             winGame();
-                            return;
+                            stage.setScene(scene1);
+//                            curMap = 0;
+//                            stop();
+//                            return;
                         }
-                        index = 0;
+                    winGame = false;
+                    index = 0;
                         if (curMap == 0) {
                             curMap = 1;
                             gc1.drawImage(level2, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
