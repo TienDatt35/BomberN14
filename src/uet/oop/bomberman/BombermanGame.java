@@ -61,6 +61,7 @@ public class BombermanGame extends Application {
 
     public static void main(String[] args) {
         loadAll();
+        autoMap();
         Clip soundGame;
         try {
             soundGame = AudioSystem.getClip();
@@ -83,6 +84,114 @@ public class BombermanGame extends Application {
         Oneal.load();
         Kondoria.load();
         Minvo.load();
+    }
+
+    static void autoMap() {
+        int h = 13;
+        int w = 31;
+        char map[][] = new char[h][w];
+        for (int i = 0;  i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                if (i == 0 || j == 0 || i == h-1 || j == w-1 || i % 2 == 0 && j % 2 == 0) {
+                    map[i][j] = '#';
+                }
+                else {
+                    map[i][j] = ' ';
+                }
+            }
+        }
+        map[1][1] = 'p';
+
+        int items = 5;
+        int bricks = 30;
+        int enemy = 4;
+        int[] etity = new int[items+bricks+enemy];
+
+        int soluong = 0;
+        while (soluong < etity.length) {
+            while (true){
+                int tmp = (int) (Math.random() * (h*w));
+                int tmpi = tmp / w;
+                int tmpj = tmp % w;
+                int flag = 0;
+                for(int j = 0; j < soluong; j++) {
+                    if(etity[j] == tmp) {
+                        flag = 1;
+                    }
+                }
+                if(map[tmpi][tmpj] == ' ' && flag == 0) {
+                    etity[soluong] = tmp;
+                    break;
+                }
+            }
+            soluong++;
+        }
+
+        int tmp = 0;
+        while (enemy > 0) {
+            int x = (int) (Math.random() * 4) + 1;
+            int tmpi = etity[tmp] / w;
+            int tmpj = etity[tmp] % w;
+            if (x == 1) {
+                map[tmpi][tmpj] = '1';
+            }
+            else if(x == 2) {
+                map[tmpi][tmpj] = '2';
+            } else if(x == 3) {
+                map[tmpi][tmpj] = '3';
+            } else {
+                map[tmpi][tmpj] = '4';
+            }
+            tmp++;
+            enemy--;
+        }
+
+        while (items > 0) {
+            int x = (int) (Math.random() * 3) + 1;
+            int tmpi = etity[tmp] / w;
+            int tmpj = etity[tmp] % w;
+            if(items == 5) {
+                map[tmpi][tmpj] = 'x';
+                tmp++;
+                items--;
+                continue;
+            }
+            if (x == 1) {
+                map[tmpi][tmpj] = 's';
+            }
+            else if(x == 2) {
+                map[tmpi][tmpj] = 'b';
+            } else if(x == 3) {
+                map[tmpi][tmpj] = 'f';
+            }
+            else
+                map[tmpi][tmpj] = 'x';
+            tmp++;
+            items--;
+        }
+        while (bricks > 0) {
+            int tmpi = etity[tmp] / w;
+            int tmpj = etity[tmp] % w;
+
+            map[tmpi][tmpj] = '*';
+
+            tmp++;
+            bricks--;
+        }
+
+        try {
+            FileWriter fw = new FileWriter(path + "levels/" + "Level3.txt");
+            fw.write("3 13 31\n");
+            for (int i = 0;  i < h; i++) {
+                for (int j = 0; j < w; j++) {
+                    fw.write(map[i][j]);
+                }
+                fw.write("\n");
+            }
+            fw.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public void sleep(int milis) {
@@ -259,9 +368,9 @@ public class BombermanGame extends Application {
                 sleep(10);
             }
         };
-        Image logo = new Image(String.valueOf(new File(path + "image/logo.png")));
-        stage.getIcons().add(logo);
-        MenuBar menuBar = new MenuBar();
+//        Image logo = new Image(String.valueOf(new File(path + "image/logo.png")));
+//        stage.getIcons().add(logo);
+//        MenuBar menuBar = new MenuBar();
 
         timer.start();
     }
