@@ -61,13 +61,13 @@ public class test extends Application {
         // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
+        Scene scene = new Scene(root);
 
 
         Group root1 = new Group();
         root1.getChildren().add(canvas1);
         Scene scene1 = new Scene(root1);
         // Tao scene
-        Scene scene = new Scene(root);
         String path = System.getProperty("user.dir") + "/res/";
 
         stage.setTitle("Bomberman");
@@ -81,8 +81,8 @@ public class test extends Application {
                     System.out.println(1);
                 }
                 case BACK_SPACE: {
-                    stage.setScene(scene1);
-                    Map.makeMap("Level1.txt");
+//                    stage.setScene(scene1);
+//                    Map.makeMap("Level1.txt");
 
                 }
             }
@@ -90,5 +90,6 @@ public class test extends Application {
 
         stage.setScene(scene);
         stage.show();
+//        Map.makeMap(BombermanGame.map[0]);
     }
 }

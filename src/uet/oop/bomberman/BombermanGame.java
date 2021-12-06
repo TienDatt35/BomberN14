@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -258,6 +259,10 @@ public class BombermanGame extends Application {
                 sleep(10);
             }
         };
+        Image logo = new Image(String.valueOf(new File(path + "image/logo.png")));
+        stage.getIcons().add(logo);
+        MenuBar menuBar = new MenuBar();
+
         timer.start();
     }
 
