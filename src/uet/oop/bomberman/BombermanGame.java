@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +57,11 @@ public class BombermanGame extends Application {
     public static final String TITLE = "Bomberman ";
 
     public static int index = 0;
+    public static int resetGame = 0;
 
     public static void main(String[] args) {
         loadAll();
+        autoMap();
         Clip soundGame;
         try {
             soundGame = AudioSystem.getClip();
@@ -83,6 +86,114 @@ public class BombermanGame extends Application {
         Minvo.load();
     }
 
+    static void autoMap() {
+        int h = 13;
+        int w = 31;
+        char map[][] = new char[h][w];
+        for (int i = 0;  i < h; i++) {
+            for (int j = 0; j < w; j++) {
+                if (i == 0 || j == 0 || i == h-1 || j == w-1 || i % 2 == 0 && j % 2 == 0) {
+                    map[i][j] = '#';
+                }
+                else {
+                    map[i][j] = ' ';
+                }
+            }
+        }
+        map[1][1] = 'p';
+
+        int items = 5;
+        int bricks = 30;
+        int enemy = 4;
+        int[] etity = new int[items+bricks+enemy];
+
+        int soluong = 0;
+        while (soluong < etity.length) {
+            while (true){
+                int tmp = (int) (Math.random() * (h*w));
+                int tmpi = tmp / w;
+                int tmpj = tmp % w;
+                int flag = 0;
+                for(int j = 0; j < soluong; j++) {
+                    if(etity[j] == tmp) {
+                        flag = 1;
+                    }
+                }
+                if(map[tmpi][tmpj] == ' ' && flag == 0) {
+                    etity[soluong] = tmp;
+                    break;
+                }
+            }
+            soluong++;
+        }
+
+        int tmp = 0;
+        while (enemy > 0) {
+            int x = (int) (Math.random() * 4) + 1;
+            int tmpi = etity[tmp] / w;
+            int tmpj = etity[tmp] % w;
+            if (x == 1) {
+                map[tmpi][tmpj] = '1';
+            }
+            else if(x == 2) {
+                map[tmpi][tmpj] = '2';
+            } else if(x == 3) {
+                map[tmpi][tmpj] = '3';
+            } else {
+                map[tmpi][tmpj] = '4';
+            }
+            tmp++;
+            enemy--;
+        }
+
+        while (items > 0) {
+            int x = (int) (Math.random() * 3) + 1;
+            int tmpi = etity[tmp] / w;
+            int tmpj = etity[tmp] % w;
+            if(items == 5) {
+                map[tmpi][tmpj] = 'x';
+                tmp++;
+                items--;
+                continue;
+            }
+            if (x == 1) {
+                map[tmpi][tmpj] = 's';
+            }
+            else if(x == 2) {
+                map[tmpi][tmpj] = 'b';
+            } else if(x == 3) {
+                map[tmpi][tmpj] = 'f';
+            }
+            else
+                map[tmpi][tmpj] = 'x';
+            tmp++;
+            items--;
+        }
+        while (bricks > 0) {
+            int tmpi = etity[tmp] / w;
+            int tmpj = etity[tmp] % w;
+
+            map[tmpi][tmpj] = '*';
+
+            tmp++;
+            bricks--;
+        }
+
+        try {
+            FileWriter fw = new FileWriter(path + "levels/" + "Level3.txt");
+            fw.write("3 13 31\n");
+            for (int i = 0;  i < h; i++) {
+                for (int j = 0; j < w; j++) {
+                    fw.write(map[i][j]);
+                }
+                fw.write("\n");
+            }
+            fw.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
     public void sleep(int milis) {
         try {
             Thread.sleep(milis);
@@ -95,17 +206,17 @@ public class BombermanGame extends Application {
         Image winImage;
         try {
             winImage = new javafx.scene.image.Image(new FileInputStream(path + "image/winGame.jpg"));
-            gc.drawImage(winImage, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+            gc1.drawImage(winImage, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     public void gameOver() {
-        Image winImage;
+        Image gameOver;
         try {
-            winImage = new javafx.scene.image.Image(new FileInputStream(path + "image/gameOver.png"));
-            gc.drawImage(winImage, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+            gameOver = new javafx.scene.image.Image(new FileInputStream(path + "image/gameOver.png"));
+            gc.drawImage(gameOver, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -132,6 +243,7 @@ public class BombermanGame extends Application {
         Image level3 = new Image(String.valueOf(new File(path + "image/level3.png")));
         gc1.drawImage(image, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
 
+        Scene scene1 = new Scene(root1);
         // Tao màn hình chính
         Scene scene = new Scene(root);
         scene.setOnKeyPressed(keyEvent -> {
@@ -158,6 +270,10 @@ public class BombermanGame extends Application {
                 }
                 case SHIFT: {
                     winGame = true;
+                    break;
+                }
+                case BACK_SPACE: {
+                    resetGame = 1;
                 }
             }
         });
@@ -172,7 +288,6 @@ public class BombermanGame extends Application {
         });
 
         //Màn hình level
-        Scene scene1 = new Scene(root1);
         if (index == 0) {
             stage.setScene(scene1);
         } else {
@@ -180,7 +295,8 @@ public class BombermanGame extends Application {
         }
         scene1.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
-                case SHIFT: {
+                case BACK_SPACE: {
+                    resetGame = 1;
                     System.out.println(1);
                 }
                 case ENTER: {
@@ -191,16 +307,15 @@ public class BombermanGame extends Application {
                         }
                         if (curMap == 1) {
                             Bomber.k = 0;
-
                             Map.makeMap(map[curMap]);
                             stage.setScene(scene);
                         }
                         if (curMap == 2) {
+                            Bomber.k = 0;
                             Map.makeMap(map[curMap]);
                             stage.setScene(scene);
                         }
-                    } else
-                    if (index == 2) {
+                    } else if (index == 2) {
                         stage.setScene(scene);
                     }
                 }
@@ -217,30 +332,46 @@ public class BombermanGame extends Application {
                     gameOver();
                     return;
                 }
-                    if (winGame) {
-                        System.out.println(curMap);
-                        winGame = false;
-                        if (curMap == 2) {
-                            stop();
-                            winGame();
-                            return;
-                        }
-                        index = 0;
-                        if (curMap == 0) {
-                            curMap = 1;
-                            gc1.drawImage(level2, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
-                            stage.setScene(scene1);
-                        } else if (curMap == 1) {
-                            gc1.drawImage(level3, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
-                            stage.setScene(scene1);
-                            curMap = 2;
-                        }
+                if (resetGame == 1) {
+                    curMap = 0;
+                    resetGame = 0;
+                    winGame = false;
+                    Map.makeMap(map[curMap]);
+                    gc1.drawImage(level1, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+                    stage.setScene(scene1);
+//                    curMap--;
+//                    stage.setScene(scene);
+                }
+                if (winGame) {
+                    System.out.println(curMap);
+                    if (curMap == 2) {
+                        winGame();
+                        stage.setScene(scene1);
+//                            curMap = 0;
+//                            stop();
+//                            return;
                     }
+                    winGame = false;
+                    index = 0;
+                    if (curMap == 0) {
+                        curMap = 1;
+                        gc1.drawImage(level2, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+                        stage.setScene(scene1);
+                    } else if (curMap == 1) {
+                        gc1.drawImage(level3, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
+                        stage.setScene(scene1);
+                        curMap = 2;
+                    }
+                }
                 update(l);
                 render();
                 sleep(10);
             }
         };
+//        Image logo = new Image(String.valueOf(new File(path + "image/logo.png")));
+//        stage.getIcons().add(logo);
+//        MenuBar menuBar = new MenuBar();
+
         timer.start();
     }
 
