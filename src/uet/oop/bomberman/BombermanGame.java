@@ -3,7 +3,6 @@ package uet.oop.bomberman;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,7 +16,6 @@ import javafx.scene.input.KeyEvent;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
-import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +31,6 @@ public class BombermanGame extends Application {
     private Canvas canvas;
     private Canvas canvas1;
     public static GraphicsContext gc1;
-
 
     public static List<Wall> stillObjects = new ArrayList<>();
     public static List<Brick> bricks = new ArrayList<>();
@@ -54,7 +51,7 @@ public class BombermanGame extends Application {
 
     public static int curMap = 0;
     public static boolean winGame = false;
-    public static final String TITLE = "Bomberman ";
+    public static final String TITLE = "Bomberman";
 
     public static int index = 0;
     public static int resetGame = 0;
@@ -73,7 +70,6 @@ public class BombermanGame extends Application {
         }
         Application.launch(BombermanGame.class);
     }
-
 
     static void loadAll() {
         Brick.load();
@@ -227,16 +223,15 @@ public class BombermanGame extends Application {
         // Tạo màn hình chơi
         canvas = new Canvas(Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
         gc = canvas.getGraphicsContext2D();
-        // Tao root container
         Group root = new Group();
         root.getChildren().add(canvas);
-
 
         //Tạo level
         canvas1 = new Canvas(Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
         gc1 = canvas1.getGraphicsContext2D();
         Group root1 = new Group();
         root1.getChildren().add(canvas1);
+
         Image image = new Image(String.valueOf(new File(path + "image/startGame.png")));
         Image level1 = new Image(String.valueOf(new File(path + "image/level1.png")));
         Image level2 = new Image(String.valueOf(new File(path + "image/level2.png")));
@@ -297,7 +292,6 @@ public class BombermanGame extends Application {
             switch (keyEvent.getCode()) {
                 case BACK_SPACE: {
                     resetGame = 1;
-                    System.out.println(1);
                 }
                 case ENTER: {
                     index ++;
@@ -339,17 +333,11 @@ public class BombermanGame extends Application {
                     Map.makeMap(map[curMap]);
                     gc1.drawImage(level1, 0, 0, Sprite.SCALED_SIZE * 31, Sprite.SCALED_SIZE * 13);
                     stage.setScene(scene1);
-//                    curMap--;
-//                    stage.setScene(scene);
                 }
                 if (winGame) {
-                    System.out.println(curMap);
                     if (curMap == 2) {
                         winGame();
                         stage.setScene(scene1);
-//                            curMap = 0;
-//                            stop();
-//                            return;
                     }
                     winGame = false;
                     index = 0;
@@ -368,10 +356,8 @@ public class BombermanGame extends Application {
                 sleep(10);
             }
         };
-//        Image logo = new Image(String.valueOf(new File(path + "image/logo.png")));
-//        stage.getIcons().add(logo);
-//        MenuBar menuBar = new MenuBar();
-
+        Image logo = new Image(String.valueOf(new File(path + "image/bomberman.png")));
+        stage.getIcons().add(logo);
         timer.start();
     }
 

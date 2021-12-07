@@ -1,11 +1,7 @@
 package uet.oop.bomberman.entities;
 
 import javafx.geometry.Rectangle2D;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import uet.oop.bomberman.Audio.Audio;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
@@ -18,7 +14,7 @@ public class Bomber extends Entity {
     private static int speed = 2;
     public static ArrayList<ArrayList<Image>> constImage = new ArrayList<>();
     private boolean upSpeed;
-    private int life;
+    private static int life;
     private boolean reborn;
     public static int k = 0;
 
@@ -310,18 +306,6 @@ public class Bomber extends Entity {
                     this.setUpSpeed(true);
                 }
                 return;
-//                switch (BombermanGame.items.get(i).getType()) {
-//                    case (1):
-//                        this.upLimitBomb();
-//                        break;
-//                    case (2):
-//                        Bomb.upBombLen();
-//                        break;
-//                    case (3):
-//                        this.setUpSpeed(true);
-//                        break;
-//                }
-//                return;
             }
         }
     }
@@ -427,12 +411,6 @@ public class Bomber extends Entity {
         if (BombermanGame.dropBomb == true) {
             dropBomb(l);
         }
-//        if (BombermanGame.dropBomb == true && BombermanGame.preDropBomb == false) {
-//            dropBomb(l);
-//        }
-
-        // SPACE lasts ... ns
-//        BombermanGame.preDropBomb = BombermanGame.dropBomb;
 
         //Kiểm tra xem có upSpeed không
         this.upSpeed();
@@ -446,7 +424,6 @@ public class Bomber extends Entity {
 
         //Hướng di chuyển tiếp theo
         int nxtDir = canMove(BombermanGame.bomberDirection);
-        //Kiếm tra va chạm
 
         if (nxtDir == this.getDir()) {
             //Cùng hướng di chuyển cũ
