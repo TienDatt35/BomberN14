@@ -232,7 +232,7 @@ public class BombermanGame extends Application {
         Group root1 = new Group();
         root1.getChildren().add(canvas1);
 
-        Image image = new Image(String.valueOf(new File(path + "image/startGame.png")));
+        Image image = new Image(String.valueOf(new File(path + "image/startGame.jpg")));
         Image level1 = new Image(String.valueOf(new File(path + "image/level1.png")));
         Image level2 = new Image(String.valueOf(new File(path + "image/level2.png")));
         Image level3 = new Image(String.valueOf(new File(path + "image/level3.png")));
@@ -336,6 +336,7 @@ public class BombermanGame extends Application {
                 }
                 if (winGame) {
                     if (curMap == 2) {
+                        Audio.playSound("sounds/Win_Game.wav");
                         winGame();
                         stage.setScene(scene1);
                     }
