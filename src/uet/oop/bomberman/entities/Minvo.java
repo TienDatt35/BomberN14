@@ -110,6 +110,7 @@ public class Minvo extends Enemy {
                 break;
             }
         }
+
         if (!findBomber) {
             if (this.x % 32 == 0 && this.y % 32 == 0) {
                 this.dir = (int) (Math.random() * 4);
